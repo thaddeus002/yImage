@@ -49,17 +49,19 @@ int sauve_ppm(yImage *im, const char *file);
 
 
 /**
- * \brief sauvegarde "im" dans "file" au format JPEG
- * \return 1 en cas de succes
- * nécessite la bibliothèque libjpeg
+ * \brief save "im" into "file" at JPEG format
+ *
+ * Needs libjpeg library
+ * \return 0 in case of success
  */
 int sauve_jpeg(yImage *im, const char *file);
 
 
 /**
- * \brief sauvegarde "im" dans "file" au format PNG
- * \return 0 en cas de succes
- * nécessite la bibliothèque libpng
+ * \brief save "im" into "file" at PNG format.
+ *
+ * Needs libpng library
+ * \return 0 in case of success
  */
 int sauve_png(yImage *im, const char *file);
 
@@ -69,7 +71,7 @@ int sauve_png(yImage *im, const char *file);
  * \brief save "im" in "file" at the TIFF format.
  *
  * Needs the libtiff library.
- * \return 1 in case of success
+ * \return 0 in case of success
  */
 int sauve_tiff(yImage *im, const char *file);
 

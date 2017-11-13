@@ -48,9 +48,6 @@ int sauve_ppm(yImage *im, const char *file){
 
 
 
-/* sauvegarde "im" dans "file" au format JPEG */
-/* retourne 1 en cas de succes */
-/* nécessite la bibliothèque libjpeg */
 int sauve_jpeg(yImage *im, const char *file)
 {
     #ifdef HAVE_LIBJPEG
@@ -58,7 +55,7 @@ int sauve_jpeg(yImage *im, const char *file)
     struct jpeg_error_mgr jerr;
     JSAMPROW row_pointer[1];
     int row_stride;
-    FILE *f; /* descripteur du fichier à créer */
+    FILE *f; /* file to create descriptor */
 
     f = fopen(file, "wb");
     if(f)
@@ -81,17 +78,14 @@ int sauve_jpeg(yImage *im, const char *file)
         }
         jpeg_finish_compress(&cinfo);
         fclose(f);
-        return(1);
+        return 0;
     }
     #endif
-    return(0);
+    return 1;
 }
 
 
 
-/* sauvegarde "im" dans "file" au format PNG */
-/* retourne 0 en cas de succes */
-/* nécessite la bibliothèque libpng */
 int sauve_png(yImage *im, const char *file)
 {
     #ifdef HAVE_LIBPNG
@@ -185,9 +179,6 @@ int sauve_png(yImage *im, const char *file)
 
 
 
-/* sauvegarde "im" dans "file" au format TIFF */
-/* retourne 1 en cas de succes */
-/* nécessite la bibliothèque libtiff */
 int sauve_tiff(yImage *im, const char *file)
 {
     #ifdef HAVE_LIBTIFF
@@ -217,10 +208,10 @@ int sauve_tiff(yImage *im, const char *file)
             }
         }
         TIFFClose(tif);
-        return 1;
+        return 0;
     }
     #endif
-    return(0);
+    return 1;
 }
 
 
