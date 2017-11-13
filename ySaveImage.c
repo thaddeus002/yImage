@@ -23,10 +23,9 @@
 
 
 
-/* sauvegarde "im" dans "file" au format ppm ou pnm */
-/* retourne 1 en cas de succes */
+
 int sauve_ppm(yImage *im, const char *file){
-    FILE *f; /* descripteur du fichier à créer */
+    FILE *f; /* file descriptor */
 
     f = fopen(file, "wb");
     if (f)
@@ -34,17 +33,17 @@ int sauve_ppm(yImage *im, const char *file){
         if (!fprintf(f, "P6\n# Created by yImage\n%i %i\n255\n", im->rgbWidth, im->rgbHeight))
         {
             fclose(f);
-            return 0;
+            return 1;
         }
         if (!fwrite(im->rgbData, 1, (im->rgbWidth * im->rgbHeight * 3), f))
         {
             fclose(f);
-            return 0;
+            return 1;
         }
         fclose(f);
-        return 1;
+        return 0;
     }
-    return(0);
+    return 1;
 }
 
 
@@ -195,7 +194,6 @@ int sauve_tiff(yImage *im, const char *file)
     TIFF               *tif;
     unsigned char      *data;
     int                 y;
-    //int                 w;
 
     tif = TIFFOpen(file, "w");
     if (tif)
@@ -229,258 +227,117 @@ int sauve_tiff(yImage *im, const char *file)
 
 /* LOADING FILES */
 
-unsigned char *_LoadPPM(FILE * f, int *w, int *h)
-{
-    int                 done;
-    unsigned char      *ptr;
-    unsigned char       chr;
-    char s[256]; /* read line */
-    int                 a, b, i, j;
-    int                 color /* is pixmap */, scale, ascii /* is ascii */, bw /* is bitmap */;
-
-    a = b = scale = ascii = bw = color = 0;
 
 
-    fgets(s, 256, f);
-    s[2] = 0;
-    if (!strcmp(s, "P6")) // pixmap binary
-        color = 1;
-    else if (!strcmp(s, "P5")) // gray binary
-        color = 0;
-    else if (!strcmp(s, "P4")) // bitmap binary
-        bw = 1;
-    else if (!strcmp(s, "P3")) // pixmap ascii
-    {
-        color = 1;
-        ascii = 1;
+static void ignore_comments(FILE *stream) {
+
+    int c = fgetc(stream);
+
+    while(c == '#') {
+        int d = fgetc(stream);
+        while (d != '\n' && d != EOF) {
+            d = fgetc(stream);
+        }
+        c = fgetc(stream);
     }
-    else if (!strcmp(s, "P2")) // gray ascii
-    {
-        ascii = 1;
+
+    if(c != EOF) {
+        ungetc(c, stream);
     }
-    else if (!strcmp(s, "P1")) // bitmap ascii
+}
+
+
+yImage *load_ppm(const char *file) {
+
+    FILE *f; /* file descriptor */
+    yImage *im;
+
+    f = fopen(file, "rb");
+    if (f)
     {
-        ascii = 1;
-        bw = 1;
+        char magic[4]; // magic number
+        char line[20]; // header line
+        int w, h; // width and height of the image
+        int n; // read on the file, must be 255
+        int err; // error code
+        int r; // number of elts read
+
+        fread(magic, 1, 3, f);
+        magic[3]='\0';
+
+        if(strcmp(magic, "P6\n")) {
+            fprintf(stderr, "Bad file format for %s\n", file);
+            fclose(f);
+            return NULL;
+        }
+
+        ignore_comments(f);
+
+        fgets(line, 19, f);
+        line[19]='\0';
+        sscanf(line, "%d %d\n", &w, &h);
+
+        ignore_comments(f);
+
+        fgets(line, 19, f);
+        line[19]='\0';
+        sscanf(line, "%d\n", &n);
+
+        ignore_comments(f);
+
+        if(h < 0 || w < 0) {
+            fprintf(stderr, "Bad file format for %s : width x height = %d x %d\n", file, w, h);
+            fclose(f);
+            return NULL;
+        }
+
+        if(n != 255) {
+            fprintf(stderr, "Bad file format for %s : n = %d\n", file, n);
+            fclose(f);
+            return NULL;
+        }
+
+
+        im = create_yImage(&err, NULL, w, h);
+        r=fread(im->rgbData, w * h * 3, 1, f);
+
+        if(r != 1) {
+            fprintf(stderr, "Reading PPM file %s : Unexpected end of file\n", file);
+            destroy_yImage(im);
+            im = NULL;
+        }
+
+        fclose(f);
+        return im;
     }
-    else
-        return NULL;
-
-
-
-  done = 1;
-  ptr = NULL;
-  while (done)
-    {
-      if (fgets(s, 256, f) == NULL)
-    break;
-
-      if (s[0] != '#')
-    {
-      done = 0;
-      sscanf(s, "%i %i", w, h);
-      a = *w;
-      b = *h;
-      if (a > 32767)
-        {
-          fprintf(stderr, "IMLIB ERROR: Image width > 32767 pixels for file\n");
-          return NULL;
-        }
-      if (b > 32767)
-        {
-          fprintf(stderr, "IMLIB ERROR: Image height > 32767 pixels for file\n");
-          return NULL;
-        }
-      if (!bw)
-        {
-          fgets(s, 256, f);
-          sscanf(s, "%i", &scale);
-        }
-      else
-        scale = 99999;
-      ptr = (unsigned char *)malloc(a * b * 3);
-      if (!ptr)
-        {
-          fprintf(stderr, "IMLIB ERROR: Cannot allocate RAM for RGB data in file");
-          return ptr;
-        }
-      if ((color) && (!ascii) && (!bw))
-        {
-          fread(ptr, a * b * 3, 1, f);
-        }
-      else if ((!color) && (!ascii) && (!bw))
-        {
-          b = (a * b * 3);
-          a = 0;
-          while ((fread(&chr, 1, 1, f)) && (a < b))
-        {
-          ptr[a++] = chr;
-          ptr[a++] = chr;
-          ptr[a++] = chr;
-        }
-        }
-      else if ((!color) && (!ascii) && (bw))
-        {
-          b = (a * b * 3);
-          a = 0;
-          j = 0;
-          while ((fread(&chr, 1, 1, f)) && (a < b))
-        {
-          for (i = 7; i >= 0; i--)
-            {
-              j++;
-              if (j <= *w)
-            {
-              if (chr & (1 << i))
-                {
-                  ptr[a++] = 0;
-                  ptr[a++] = 0;
-                  ptr[a++] = 0;
-                }
-              else
-                {
-                  ptr[a++] = 255;
-                  ptr[a++] = 255;
-                  ptr[a++] = 255;
-                }
-            }
-            }
-          if (j >= *w)
-            j = 0;
-        }
-        }
-      else if ((color) && (ascii) && (!bw))
-        {
-          b = (a * b * 3);
-          a = 0;
-          i = 0;
-          if (scale != 255)
-        {
-          while ((fread(&chr, 1, 1, f)) && (a < b))
-            {
-              s[i++] = chr;
-              if (!isdigit(chr))
-            {
-              s[i - 1] = 0;
-              if ((i > 1) && (isdigit(s[i - 2])))
-                {
-                  ptr[a++] = ((atoi(s)) * 255) / scale;
-                }
-              i = 0;
-            }
-            }
-        }
-          else
-        {
-          while ((fread(&chr, 1, 1, f)) && (a < b))
-            {
-              s[i++] = chr;
-              if (!isdigit(chr))
-            {
-              s[i - 1] = 0;
-              if ((i > 1) && (isdigit(s[i - 2])))
-                {
-                  ptr[a++] = atoi(s);
-                }
-              i = 0;
-            }
-            }
-        }
-
-        }
-      else if ((!color) && (ascii) && (!bw))
-        {
-          b = (a * b * 3);
-          a = 0;
-          i = 0;
-          if (scale != 255)
-        {
-          while ((fread(&chr, 1, 1, f)) && (a < b))
-            {
-              s[i++] = chr;
-              if (!isdigit(chr))
-            {
-              s[i - 1] = 0;
-              if ((i > 1) && (isdigit(s[i - 2])))
-                {
-                  ptr[a++] = ((atoi(s)) * 255) / scale;
-                  ptr[a++] = ptr[a - 1];
-                  ptr[a++] = ptr[a - 1];
-                }
-              i = 0;
-            }
-            }
-        }
-          else
-        {
-          while ((fread(&chr, 1, 1, f)) && (a < b))
-            {
-              s[i++] = chr;
-              if (!isdigit(chr))
-            {
-              s[i - 1] = 0;
-              if ((i > 1) && (isdigit(s[i - 2])))
-                {
-                  ptr[a++] = atoi(s);
-                  ptr[a++] = ptr[a - 1];
-                  ptr[a++] = ptr[a - 1];
-                }
-              i = 0;
-            }
-            }
-        }
-        }
-      else if ((!color) && (ascii) && (bw))
-        {
-        }
-    }
-    }
-  if (!ptr)
     return NULL;
-  if (scale == 0)
-    {
-      free(ptr);
-      return NULL;
-    }
-  if ((scale < 255) && (!ascii))
-    {
-      int                 rot;
-      unsigned char      *po;
-
-      if (scale <= 1)
-    rot = 7;
-      else if (scale <= 3)
-    rot = 6;
-      else if (scale <= 7)
-    rot = 5;
-      else if (scale <= 15)
-    rot = 4;
-      else if (scale <= 31)
-            rot = 3;
-        else if (scale <= 63)
-            rot = 2;
-        else
-            rot = 1;
-
-        if (rot > 0)
-        {
-            po = ptr;
-            while (po < (ptr + (*w ** h * 3)))
-            {
-                *po++ <<= rot;
-                *po++ <<= rot;
-                *po++ <<= rot;
-            }
-        }
-    }
-    return ptr;
 }
 
 
 
+#ifdef HAVE_LIBPNG
+
+static yImage *LoadPNG(FILE *f);
+
+yImage *load_png(const char *file) {
+
+    FILE *fd;
+    yImage *im = NULL;
+
+    fd=fopen(file, "r");
+
+    if(fd == NULL) {
+        fprintf(stderr, "Could not open file %s\n", file);
+        return NULL;
+    }
+
+    im = LoadPNG(fd);
+    fclose(fd);
+    return im;
+}
 
 
-yImage *LoadPNG(FILE *f)
+static yImage *LoadPNG(FILE *f)
 {
     png_structp png_ptr;
     png_infop info_ptr;
@@ -494,7 +351,6 @@ yImage *LoadPNG(FILE *f)
     unsigned char *ptrAlpha;
     int width, height;
     png_byte color_type;
-    //png_byte bit_depth;
     char header[8];    // 8 is the maximum size that can be checked
     int err; /* error code */
 
@@ -503,7 +359,6 @@ yImage *LoadPNG(FILE *f)
 
     /* Init PNG Reader */
 
-    /*Raj*/
     fread((void *) header, 1, 8, f);
     if (png_sig_cmp((png_const_bytep)header, 0, 8))
     {
@@ -529,7 +384,6 @@ yImage *LoadPNG(FILE *f)
 
     png_init_io(png_ptr, f);
 
-    /*Raj*/
     png_set_sig_bytes(png_ptr, 8);
 
     png_read_info(png_ptr, info_ptr);
@@ -537,11 +391,6 @@ yImage *LoadPNG(FILE *f)
     width = png_get_image_width(png_ptr, info_ptr);
     height = png_get_image_height(png_ptr, info_ptr);
     color_type = png_get_color_type(png_ptr, info_ptr);
-    //bit_depth = png_get_bit_depth(png_ptr, info_ptr);
-
-
-    //png_get_IHDR(png_ptr, info_ptr, &ww, &hh, &bit_depth, &color_type, &interlace_type, NULL, NULL);
-
 
     /* Setup Translators */
     if (color_type == PNG_COLOR_TYPE_PALETTE)
@@ -673,3 +522,4 @@ yImage *LoadPNG(FILE *f)
     return im;
 }
 
+#endif

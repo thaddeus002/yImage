@@ -22,19 +22,28 @@
 // READING
 
 /**
- * \brief Load a yImage from a png file
- * \param f file descriptor of the png image
- * \return the yImage contained in f
+ * \brief load an yImage from a binary ppm file.
+ * \param the filename for the data to read
+ * \return a new yImage or NULL if the reading failed
  */
-yImage *LoadPNG(FILE * f);
+yImage *load_ppm(const char *file);
+
+
+/**
+ * \brief Load an yImage from a png file
+ * \param the filename for the data to read
+ * \return a new yImage or NULL if the reading failed
+ */
+yImage *load_png(const char *file);
+
 
 
 // WRITING
 
 
 /**
- * \brief sauvegarde "im" dans "file" au format ppm ou pnm.
- * \return 1 en cas de succes
+ * \brief Save "im" into "file" at binary ppm format.
+ * \return 0 in case of success
  */
 int sauve_ppm(yImage *im, const char *file);
 
@@ -57,9 +66,10 @@ int sauve_png(yImage *im, const char *file);
 
 
 /**
- * \brief sauvegarde "im" dans "file" au format TIFF
- * \return retourne 1 en cas de succes
- * nécessite la bibliothèque libtiff
+ * \brief save "im" in "file" at the TIFF format.
+ *
+ * Needs the libtiff library.
+ * \return 1 in case of success
  */
 int sauve_tiff(yImage *im, const char *file);
 
