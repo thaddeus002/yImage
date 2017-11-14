@@ -42,9 +42,10 @@ endif
 
 CFLAGS = -Wall -O2 -s $(INCLUDEDIR) $(OPTIONS)
 
-OBJS=yImage.o yColor.o ySaveImage.o yXinterface.o dessin.o graphiques.o range_optimization.o font.o text.o
+OBJS=yImage.o yColor.o ySaveImage.o dessin.o graphiques.o range_optimization.o font.o text.o
 # first basic version
-OBJS=yImage.o yColor.o ySaveImage.o yXinterface.o
+OBJS=yImage.o yColor.o ySaveImage.o
+HEADERS=yImage.h yColor.h ySaveImage.h
 
 EXEC=test test_dessin test_graphique test_font fillIm trace_graphe
 
@@ -58,7 +59,7 @@ libyImage.a: $(OBJS)
 	rm -f libyImage.a
 	ar -cvq libyImage.a $(OBJS)
 
-.PHONY: clean install uninstall
+.PHONY: clean mrproper install uninstall
 
 clean:
 	rm -f *.o *.a
@@ -68,17 +69,15 @@ mrproper: clean
 
 install: libyImage.a
 	install -m 0640 libyImage.a $(PREFIX)/lib/
-	install -m 0640 yImage.h yXinterface.h $(PREFIX)/include/
+	install -m 0640 $(HEADERS) $(PREFIX)/include/
 
 uninstall:
 	rm -f $(PREFIX)/lib/libyImage.a
 	rm -f $(PREFIX)/include/yImage.h
-	rm -f $(PREFIX)/include/yXinterface.h
+	rm -f $(PREFIX)/include/yColor.h
+	rm -f $(PREFIX)/include/ySaveImage.h
 
 exec: $(EXEC)
-
-test: test.c
-	$(CC) -I/usr/local/gevy/include $(CFLAGS) test.c -o test -L/usr/local/gevy/lib -L. -lyImage -lImlib -lX11 -lXext -lm $(LIBS) -L/usr/lib -lgif
 
 test_dessin: test_dessin.c libyImage.a
 	$(CC) $(CFLAGS) test_dessin.c -o test_dessin -L. -lyImage $(LIBS)
