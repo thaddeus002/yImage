@@ -45,7 +45,7 @@ yImage *load_png(const char *file);
  * \brief Save "im" into "file" at binary ppm format.
  * \return 0 in case of success
  */
-int sauve_ppm(yImage *im, const char *file);
+int save_ppm(yImage *im, const char *file);
 
 
 /**
@@ -54,7 +54,7 @@ int sauve_ppm(yImage *im, const char *file);
  * Needs libjpeg library
  * \return 0 in case of success
  */
-int sauve_jpeg(yImage *im, const char *file);
+int save_jpeg(yImage *im, const char *file);
 
 
 /**
@@ -63,7 +63,7 @@ int sauve_jpeg(yImage *im, const char *file);
  * Needs libpng library
  * \return 0 in case of success
  */
-int sauve_png(yImage *im, const char *file);
+int save_png(yImage *im, const char *file);
 
 
 
@@ -73,7 +73,7 @@ int sauve_png(yImage *im, const char *file);
  * Needs the libtiff library.
  * \return 0 in case of success
  */
-int sauve_tiff(yImage *im, const char *file);
+int save_tiff(yImage *im, const char *file);
 
 
 

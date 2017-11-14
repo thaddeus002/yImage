@@ -24,7 +24,7 @@
 
 
 
-int sauve_ppm(yImage *im, const char *file){
+int save_ppm(yImage *im, const char *file){
     FILE *f; /* file descriptor */
 
     f = fopen(file, "wb");
@@ -48,7 +48,7 @@ int sauve_ppm(yImage *im, const char *file){
 
 
 
-int sauve_jpeg(yImage *im, const char *file)
+int save_jpeg(yImage *im, const char *file)
 {
     #ifdef HAVE_LIBJPEG
     struct jpeg_compress_struct cinfo;
@@ -86,7 +86,7 @@ int sauve_jpeg(yImage *im, const char *file)
 
 
 
-int sauve_png(yImage *im, const char *file)
+int save_png(yImage *im, const char *file)
 {
     #ifdef HAVE_LIBPNG
     png_structp png_ptr;
@@ -179,7 +179,7 @@ int sauve_png(yImage *im, const char *file)
 
 
 
-int sauve_tiff(yImage *im, const char *file)
+int save_tiff(yImage *im, const char *file)
 {
     #ifdef HAVE_LIBTIFF
     TIFF               *tif;
@@ -306,7 +306,6 @@ yImage *load_ppm(const char *file) {
 
 
 
-#ifdef HAVE_LIBPNG
 
 static yImage *LoadPNG(FILE *f);
 
@@ -322,7 +321,10 @@ yImage *load_png(const char *file) {
         return NULL;
     }
 
+    #ifdef HAVE_LIBPNG
     im = LoadPNG(fd);
+    #endif
+
     fclose(fd);
     return im;
 }
@@ -512,5 +514,3 @@ static yImage *LoadPNG(FILE *f)
     /* End */
     return im;
 }
-
-#endif
