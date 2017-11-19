@@ -52,7 +52,10 @@ void init_palette(yColorPalette_t palette, const uint8_t *pal);
  * Get a color on the palette.
  * \param color a allocated struct to get the result
  * \param palette the palette
- * \param index the index of the color we want
+ * \param index the index of the color we want (between 0 and 255)
+ * \return the index of the wanted color or a negative error code :
+ * ERR_NULL_COLOR, ERR_NULL_PALETTE, or ERR_BAD_INDEX (if "index" is
+ * out of range)
  */
 int y_get_color_index(yColor *color, yColorPalette_t palette, int index);
 
@@ -61,26 +64,36 @@ int y_get_color_index(yColor *color, yColorPalette_t palette, int index);
 
 /**
  * \brief Init a color.
- * \param color
+ * \param color an ySimpleColor
  * \return a newly allocated struct
  */
 yColor *y_color(ySimpleColor color);
 
 
 /**
- * \brief Init the data of a yColor struct
+ * \brief Init the data of a yColor struct.
+ * \param color a pre-allocated struct to initialize
+ * \param r the red level of the color (0 to 255)
+ * \param g the green level of the color (0 to 255)
+ * \param b the blue level of the color (0 to 255)
+ * \param a the alpha chanel (0 for totally transparent, 255 for
+ * totally opaque)
  */
 void y_set_color(yColor *color, unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
 
 /**
- * \brief Init the data of a yColor struct
+ * \brief Init the data of a yColor struct.
+ * \param color a pre-allocated struct to initialize
+ * \param rgba the four bytes r,g,b, and a in an unique integer
  */
 void y_init_color(yColor *color, unsigned int rgba);
 
 
 /**
  * \brief Compare two colors.
+ * \param c1 the first color to compare
+ * \param c2 the second color to compare
  * \return 0 if the colors are identical
  */
 int compare_colors(yColor *c1, yColor *c2);

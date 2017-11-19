@@ -1,8 +1,12 @@
 /**
  * \file yImage_io.h
- * \brief load and save yImage in differents formats.
+ * \brief Load and save yImage in differents formats.
  *
- * yImage is under GPL license (GNU GENERAL PUBLIC LICENSE)
+ * PPM read or write is available without the need of an extern library.
+ * The use of PNG, JPEG or TIFF format needs the correspondant library
+ * at build time.
+ *
+ * libyImage is under GPL license (GNU GENERAL PUBLIC LICENSE)
  */
 
 
@@ -23,7 +27,8 @@
 
 /**
  * \brief load an yImage from a binary ppm file.
- * \param the filename for the data to read
+ * \param file
+ *            the filename for the data to read
  * \return a new yImage or NULL if the reading failed
  */
 yImage *load_ppm(const char *file);
@@ -31,7 +36,8 @@ yImage *load_ppm(const char *file);
 
 /**
  * \brief Load an yImage from a png file
- * \param the filename for the data to read
+ * \param file
+ *            the filename for the data to read
  * \return a new yImage or NULL if the reading failed
  */
 yImage *load_png(const char *file);
@@ -43,6 +49,10 @@ yImage *load_png(const char *file);
 
 /**
  * \brief Save "im" into "file" at binary ppm format.
+ * \param im
+ *            the image's data
+ * \param file
+ *            the filename of the file to create
  * \return 0 in case of success
  */
 int save_ppm(yImage *im, const char *file);
@@ -52,6 +62,10 @@ int save_ppm(yImage *im, const char *file);
  * \brief save "im" into "file" at JPEG format
  *
  * Needs libjpeg library
+ * \param im
+ *            the image's data
+ * \param file
+ *            the filename of the file to create
  * \return 0 in case of success
  */
 int save_jpeg(yImage *im, const char *file);
@@ -61,6 +75,10 @@ int save_jpeg(yImage *im, const char *file);
  * \brief save "im" into "file" at PNG format.
  *
  * Needs libpng library
+ * \param im
+ *            the image's data
+ * \param file
+ *            the filename of the file to create
  * \return 0 in case of success
  */
 int save_png(yImage *im, const char *file);
@@ -71,6 +89,10 @@ int save_png(yImage *im, const char *file);
  * \brief save "im" in "file" at the TIFF format.
  *
  * Needs the libtiff library.
+ * \param im
+ *            the image's data
+ * \param file
+ *            the filename of the file to create
  * \return 0 in case of success
  */
 int save_tiff(yImage *im, const char *file);
