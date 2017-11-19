@@ -42,10 +42,10 @@ endif
 
 CFLAGS = -Wall -O2 -s $(INCLUDEDIR) $(OPTIONS)
 
-OBJS=yImage.o yColor.o ySaveImage.o dessin.o graphiques.o range_optimization.o font.o text.o
+OBJS=yImage.o yColor.o yImage_io.o dessin.o graphiques.o range_optimization.o font.o text.o
 # first basic version
-OBJS=yImage.o yColor.o ySaveImage.o
-HEADERS=yImage.h yColor.h ySaveImage.h
+OBJS=yImage.o yColor.o yImage_io.o
+HEADERS=yImage.h yColor.h yImage_io.h
 
 EXEC=test test_dessin test_graphique test_font fillIm trace_graphe
 
@@ -75,7 +75,7 @@ uninstall:
 	rm -f $(PREFIX)/lib/libyImage.a
 	rm -f $(PREFIX)/include/yImage.h
 	rm -f $(PREFIX)/include/yColor.h
-	rm -f $(PREFIX)/include/ySaveImage.h
+	rm -f $(PREFIX)/include/yImage_io.h
 
 exec: $(EXEC)
 

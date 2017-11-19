@@ -1,13 +1,13 @@
 /**
- * \file ySaveImage.h
+ * \file yImage_io.h
  * \brief load and save yImage in differents formats.
  *
  * yImage is under GPL license (GNU GENERAL PUBLIC LICENSE)
  */
 
 
-#ifndef Y_SAVE_IMAGE_H_
-#define Y_SAVE_IMAGE_H_
+#ifndef Y_IMAGE_IO_H_
+#define Y_IMAGE_IO_H_
 
 
 #include <stdint.h>

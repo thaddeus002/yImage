@@ -1,11 +1,11 @@
 /**
- * \file ySaveImage.c : sauvegarder des images dans différents formats
+ * \file yImage_io.c : sauvegarder des images dans différents formats
  * fonctions inspirées de la bibliothèque Imlib 1.x
  *      => yImage est sous licence GPL (GNU GENERAL PUBLIC LICENSE)
  */
 
 
-#include "ySaveImage.h"
+#include "yImage_io.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
