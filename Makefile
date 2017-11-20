@@ -7,7 +7,6 @@ HAVE_LIBPNG=yes
 HAVE_LIBTIFF=yes
 HAVE_LIBJPEG=yes
 
-
 INCLUDEPNG=-I/usr/local/include
 INCLUDEJPEG=-I/usr/include
 INCLUDETIFF=-I/usr/local/include
@@ -59,7 +58,7 @@ libyImage.a: $(OBJS)
 	rm -f libyImage.a
 	ar -cvq libyImage.a $(OBJS)
 
-.PHONY: clean mrproper install uninstall
+.PHONY: clean mrproper install uninstall doc
 
 clean:
 	rm -f *.o *.a
@@ -78,6 +77,9 @@ uninstall:
 	rm -f $(PREFIX)/include/yImage_io.h
 
 exec: $(EXEC)
+
+doc:
+	doxygen
 
 test_dessin: test_dessin.c libyImage.a
 	$(CC) $(CFLAGS) test_dessin.c -o test_dessin -L. -lyImage $(LIBS)
