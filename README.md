@@ -26,61 +26,72 @@ Some extern libraries are optionally used :
 
 To generated the static library file `yImage.a`, simply do :
 
-    $ make
+```sh
+$ make
+```
 
 And then to install it in `/usr/local/lib` and the headers files in `/usr/local/include` :
 
-    $ make install
+``` sh
+$ make install
+```
 
 Generate the API documentation needs doxygen. Process by typing :
 
-    $ make doc
+```sh
+$ make doc
+```
 
 Then, open the file `doc/html/index.html` in a web browser.
 
 
-## using libyImage
+## Usage
 
 The images are represented as simple raster in the yImage struct :
 
-    typedef struct {
-        unsigned char *rgbData; /* table RGBRGBRGB... */
-        unsigned char *alphaChanel; /* array of alpha (8bits) values */
-        int rgbWidth, rgbHeight; /* image's xidth and height */
-        int presShapeColor; /* indicate if shape_color is use or not */
-        /* available if alpha_chanel == NULL and presShapeColor != 0 */
-        yColor shapeColor; /* this color is for transparent pixels */
-    } yImage;
+```C
+typedef struct {
+    unsigned char *rgbData; /* table RGBRGBRGB... */
+    unsigned char *alphaChanel; /* array of alpha (8bits) values */
+    int rgbWidth, rgbHeight; /* image's width and height */
+    int presShapeColor; /* indicate if shape_color is use or not */
+    /* available if alpha_chanel == NULL and presShapeColor != 0 */
+    yColor shapeColor; /* this color is for transparent pixels */
+} yImage;
+```
 
 ### Short example
 
 Here is a program png2ppm.c to convert a PNG file to the PPM binary format :
 
-    #include "yImage.h"
-    #include "yImage_io.h"
+```C
+#include "yImage.h"
+#include "yImage_io.h"
 
 
-    int main(int argc, char**argv) {
+int main(int argc, char**argv) {
 
-        yImage *im;
+    yImage *im;
 
-        if(argc < 2) {
-            return 1;
-        }
-
-        im = load_png(argv[1]);
-
-        if(im == NULL) {
-            return 2;
-        }
-
-        save_ppm(im, "out.ppm");
-
-        destroy_yImage(im);
-
-        return 0;
+    if(argc < 2) {
+        return 1;
     }
+
+    im = load_png(argv[1]);
+
+    if(im == NULL) {
+        return 2;
+    }
+
+    save_ppm(im, "out.ppm");
+    destroy_yImage(im);
+
+    return 0;
+}
+```
 
 Compile this program with command :
 
-    $ gcc -o png2ppm png2ppm.c -DHAVE_LIBPNG -lyImage -lpng -lz
+```sh
+$ gcc -o png2ppm png2ppm.c -DHAVE_LIBPNG -lyImage -lpng -lz
+```

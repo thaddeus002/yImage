@@ -18,14 +18,28 @@
 
 
 
-/** \brief A raster image */
+/**
+ * \brief A raster image
+ *
+ * This struct contains the image's data : its size, and the color for
+ * each pixel.
+ */
 typedef struct {
-    unsigned char *rgbData; /* table RGBRGBRGB... */
-    unsigned char *alphaChanel; /* array of alpha (8bits) values */
-    int rgbWidth, rgbHeight; /* image's xidth and height */
-    int presShapeColor; /* indicate if shape_color is use or not */
-    /* available if alpha_chanel == NULL and presShapeColor != 0 */
-    yColor shapeColor; /* this color is for transparent pixels */
+    unsigned char *rgbData; /**< \brief RGB table */
+    unsigned char *alphaChanel; /**< \brief array of alpha (8bits) values */
+    int rgbWidth; /**< \brief image's width */
+    int rgbHeight; /**< \brief image's height */
+    int presShapeColor; /**< indicate if the struct's field shape_color is use or not */
+    /**
+     * \brief Color used for transparent pixels.
+     *
+     * This field will be take into account only if alpha_chanel == NULL
+     * and presShapeColor != 0.
+     *
+     * If this is used, image has not progressive transparency, and
+     * that color can not be displayed.
+     */
+    yColor shapeColor;
 } yImage;
 
 
@@ -35,7 +49,7 @@ typedef struct {
 /************************************************************/
 
 /**
- * Create an yImage without transparency.
+ * \brief Create an yImage without transparency.
  * \param err the function will write here the returned error code
  * \param rbg_data the background image. Background will be black if NULL
  * \param width the new image's width
@@ -46,7 +60,7 @@ yImage *create_yImage(int *err, const unsigned char *rgb_data, int width, int he
 
 
 /**
- * Create an yImage with an uniform background color.
+ * \brief Create an yImage with an uniform background color.
  * \param err the function will write here the returned error code
  * \param background the yColor to use for the image's background
  * \param width the new image's width
@@ -57,7 +71,7 @@ yImage *create_uniform_yImage(int *err, yColor *background, int width, int heigh
 
 
 /**
- * free memory.
+ * \brief free memory.
  * \param im the struct to free
  */
 void destroy_yImage(yImage *im);
