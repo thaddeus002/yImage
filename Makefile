@@ -41,10 +41,10 @@ endif
 
 CFLAGS = -Wall -O2 -s $(INCLUDEDIR) $(OPTIONS)
 
-OBJS=yImage.o yColor.o yImage_io.o dessin.o graphiques.o range_optimization.o font.o text.o
+OBJS=yImage.o yColor.o yImage_io.o yDraw.o graphiques.o range_optimization.o font.o text.o
 # first basic version
-OBJS=yImage.o yColor.o yImage_io.o
-HEADERS=yImage.h yColor.h yImage_io.h
+OBJS=yImage.o yColor.o yImage_io.o yDraw.o
+HEADERS=yImage.h yColor.h yImage_io.h yDraw.h
 
 EXEC=test test_dessin test_graphique test_font fillIm trace_graphe
 
@@ -54,7 +54,7 @@ all: libyImage.a
 	$(CC) -c $(CFLAGS) $<
 
 libyImage.a: $(OBJS)
-	#Création de la bibliothèque statique
+	@echo "Creating the static library"
 	rm -f libyImage.a
 	ar -cvq libyImage.a $(OBJS)
 
@@ -75,6 +75,7 @@ uninstall:
 	rm -f $(PREFIX)/include/yImage.h
 	rm -f $(PREFIX)/include/yColor.h
 	rm -f $(PREFIX)/include/yImage_io.h
+	rm -f $(PREFIX)/include/yDraw.h
 
 exec: $(EXEC)
 
