@@ -41,10 +41,8 @@ endif
 
 CFLAGS = -Wall -O2 -s $(INCLUDEDIR) $(OPTIONS)
 
-OBJS=yImage.o yColor.o yImage_io.o yDraw.o graphiques.o range_optimization.o font.o text.o
-# first basic version
-OBJS=yImage.o yColor.o yImage_io.o yDraw.o
-HEADERS=yImage.h yColor.h yImage_io.h yDraw.h
+OBJS=yImage.o yColor.o yImage_io.o yDraw.o yFont.o yText.o
+HEADERS=yImage.h yColor.h yImage_io.h yDraw.h yFont.h yText.h
 
 EXEC=test test_dessin test_graphique test_font fillIm trace_graphe
 
@@ -52,6 +50,9 @@ all: libyImage.a
 
 %.o: %.c %.h
 	$(CC) -c $(CFLAGS) $<
+
+yFont.o: yFont.c yFont.h
+	$(CC) -c $(CFLAGS) -DINSTALL_DIR=\"$(PREFIX)\" $<
 
 libyImage.a: $(OBJS)
 	@echo "Creating the static library"
@@ -69,6 +70,8 @@ mrproper: clean
 install: libyImage.a
 	install -m 0640 libyImage.a $(PREFIX)/lib/
 	install -m 0640 $(HEADERS) $(PREFIX)/include/
+	mkdir -p $(PREFIX)/share/consolefonts
+	install -m 640 yLat1-14.psfu $(PREFIX)/share/consolefonts
 
 uninstall:
 	rm -f $(PREFIX)/lib/libyImage.a
@@ -76,6 +79,9 @@ uninstall:
 	rm -f $(PREFIX)/include/yColor.h
 	rm -f $(PREFIX)/include/yImage_io.h
 	rm -f $(PREFIX)/include/yDraw.h
+	rm -f $(PREFIX)/include/yFont.h
+	rm -f $(PREFIX)/include/yText.h
+	rm -f $(PREFIX)/share/consolefonts/yLat1-14.psfu
 
 exec: $(EXEC)
 
