@@ -12,17 +12,17 @@
 
 int y_fill_image(yImage *im, yColor c){
 
-  int i; /* counter */
+    int i; /* counter */
 
-  for(i=0; i<im->rgbWidth*im->rgbHeight; i++){
-    im->rgbData[3*i]=c.r;
-    im->rgbData[3*i+1]=c.g;
-    im->rgbData[3*i+2]=c.b;
-    im->alphaChanel[i]=c.alpha;
-    im->presShapeColor=0;
-  }
+    for(i=0; i<im->rgbWidth*im->rgbHeight; i++){
+        im->rgbData[3*i]=c.r;
+        im->rgbData[3*i+1]=c.g;
+        im->rgbData[3*i+2]=c.b;
+        im->alphaChanel[i]=c.alpha;
+        im->presShapeColor=0;
+    }
 
-  return 0;
+    return 0;
 }
 
 
@@ -66,58 +66,58 @@ int y_draw_point(yImage *im, yPoint P, yColor c){
 
 int y_draw_line(yImage *im, yPoint M, yPoint N, yColor c){
 
-  int orientation; /* 1 if Delta X > Delta Y, 0 otherwise */
-  int deltaX;
-  int deltaY;
-  int Z; /* temporary coordonate */
-  yPoint pointCourant;
-  int drawn=0; /* return value */
-  int tmp; /* temporary value */
+    int orientation; /* 1 if Delta X > Delta Y, 0 otherwise */
+    int deltaX;
+    int deltaY;
+    int Z; /* temporary coordonate */
+    yPoint pointCourant;
+    int drawn=0; /* return value */
+    int tmp; /* temporary value */
 
-  deltaX=N.X-M.X;
-  if(deltaX<0) deltaX=-deltaX;
-  deltaY=N.Y-M.Y;
-  if(deltaY<0) deltaY=-deltaY;
+    deltaX=N.X-M.X;
+    if(deltaX<0) deltaX=-deltaX;
+    deltaY=N.Y-M.Y;
+    if(deltaY<0) deltaY=-deltaY;
 
-  if((deltaX==0) && (deltaY==0)) return draw_point(im, M, c);
+    if((deltaX==0) && (deltaY==0)) return y_draw_point(im, M, c);
 
-  if(deltaX>=deltaY) orientation=1;
-  else orientation = 0;
+    if(deltaX>=deltaY) orientation=1;
+    else orientation = 0;
 
-  if(orientation){
-    // boucle on X
+    if(orientation){
+        // boucle on X
 
-    if(M.X>N.X){
-      /* inversion of points */
-      Z=M.X; M.X=N.X; N.X=Z;
-      Z=M.Y; M.Y=N.Y; N.Y=Z;
+        if(M.X>N.X){
+            /* inversion of points */
+            Z=M.X; M.X=N.X; N.X=Z;
+            Z=M.Y; M.Y=N.Y; N.Y=Z;
+        }
+
+        for(pointCourant.X=M.X; pointCourant.X<=N.X; pointCourant.X++){
+
+            pointCourant.Y=M.Y+(N.Y-M.Y)*(pointCourant.X-M.X)/deltaX;
+            tmp = y_draw_point(im, pointCourant, c);
+            if(!drawn) drawn=tmp;
+        }
+
+    } else {
+        // boucle on Y
+
+        if(M.Y>N.Y){
+            /* inversion of points */
+            Z=M.X; M.X=N.X; N.X=Z;
+            Z=M.Y; M.Y=N.Y; N.Y=Z;
+        }
+
+        for(pointCourant.Y=M.Y; pointCourant.Y<=N.Y; pointCourant.Y++){
+
+            pointCourant.X=M.X+(N.X-M.X)*(pointCourant.Y-M.Y)/deltaY;
+            tmp = y_draw_point(im, pointCourant, c);
+            if(!drawn) drawn=tmp;
+        }
     }
 
-    for(pointCourant.X=M.X; pointCourant.X<=N.X; pointCourant.X++){
-
-      pointCourant.Y=M.Y+(N.Y-M.Y)*(pointCourant.X-M.X)/deltaX;
-      tmp = draw_point(im, pointCourant, c);
-      if(!drawn) drawn=tmp;
-    }
-
-  } else {
-    // boucle on Y
-
-    if(M.Y>N.Y){
-      /* inversion of points */
-      Z=M.X; M.X=N.X; N.X=Z;
-      Z=M.Y; M.Y=N.Y; N.Y=Z;
-    }
-
-    for(pointCourant.Y=M.Y; pointCourant.Y<=N.Y; pointCourant.Y++){
-
-      pointCourant.X=M.X+(N.X-M.X)*(pointCourant.Y-M.Y)/deltaY;
-      tmp = draw_point(im, pointCourant, c);
-      if(!drawn) drawn=tmp;
-    }
-  }
-
-  return drawn;
+    return drawn;
 }
 
 
@@ -128,7 +128,7 @@ void y_draw_lines(yImage *im, yColor *color, yPoint *points, int nbPoints){
     if(nbPoints == 0) return;
 
     if(nbPoints == 1) {
-        draw_point(im, points[0], *color);
+        y_draw_point(im, points[0], *color);
         return;
     }
 
@@ -141,7 +141,7 @@ void y_draw_lines(yImage *im, yColor *color, yPoint *points, int nbPoints){
         pointJ.X = points[i+1].X;
         pointJ.Y = points[i+1].Y;
 
-        draw_line(im, pointI, pointJ, *color);
+        y_draw_line(im, pointI, pointJ, *color);
     }
 }
 
