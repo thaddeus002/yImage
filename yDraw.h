@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2009-2017 Yannick Garcia <thaddeus.dupont@free.fr>
+ *
+ * yImage is free software; you can redistribute it and/or modify
+ * it under the terms of the GPL license. See LICENSE for details.
+ */
+
 /**
  * \file yDraw.h
  * \brief Basic functions for drawing
- * \author Yannick Garcia
- * Licence : GPL v3
  */
 
 #ifndef DESSIN_H_

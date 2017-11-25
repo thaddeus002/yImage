@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2009-2017 Yannick Garcia <thaddeus.dupont@free.fr>
+ *
+ * yImage is free software; you can redistribute it and/or modify
+ * it under the terms of the GPL license. See LICENSE for details.
+ */
+
 /**
  * \file yImage_io.h
  * \brief Load and save yImage in differents formats.
@@ -5,10 +12,7 @@
  * PPM read or write is available without the need of an extern library.
  * The use of PNG, JPEG or TIFF format needs the correspondant library
  * at build time.
- *
- * libyImage is under GPL license (GNU GENERAL PUBLIC LICENSE)
  */
-
 
 #ifndef Y_IMAGE_IO_H_
 #define Y_IMAGE_IO_H_

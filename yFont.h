@@ -1,5 +1,13 @@
+/*
+ * Copyright (c) 2009-2017 Yannick Garcia <thaddeus.dupont@free.fr>
+ *
+ * yImage is free software; you can redistribute it and/or modify
+ * it under the terms of the GPL license. See LICENSE for details.
+ */
+
 /**
  * \file yFont.h
+ * \brief font management.
  */
 
 #ifndef FONT_H_

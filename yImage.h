@@ -1,11 +1,16 @@
+/*
+ * Copyright (c) 2009-2017 Yannick Garcia <thaddeus.dupont@free.fr>
+ *
+ * yImage is free software; you can redistribute it and/or modify
+ * it under the terms of the GPL license. See LICENSE for details.
+ */
+
 /**
  * \file yImage.h
  * \brief images representation and basic operations. Plus load or save actions.
  *
  * Can save images in various formats with functions which are inspired by the
  * imlib library.
- *
- * This file is under GPL license (GNU GENERAL PUBLIC LICENSE).
  */
 
 #include <stdint.h>

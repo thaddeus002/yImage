@@ -8,7 +8,6 @@
 /**
  * \file yText.c
  * \brief text drawing functions.
- * \author Yannick Garcia
  */
 
 #include "yText.h"

@@ -8,7 +8,6 @@
 /**
  * \file yText.h
  * \brief text drawing functions.
- * \author Yannick Garcia
  */
 
 #ifndef TEXT_H_
@@ -20,7 +19,7 @@
 
 
 /**
- * Create a new image with transparent background and showing a given
+ * \brief Create a new image with transparent background and showing a given
  * text.
  * \param font the font to use
  * \param text the text to display
@@ -31,7 +30,7 @@ yImage *create_text(font_t *font, char *text, yColor *color);
 
 
 /**
- * Display a text in black on an existing image.
+ * \brief Display a text in black on an existing image.
  * \param fond the background image
  * \param x x position on the background image to begin writing
  * \param y y position on the background image to write
