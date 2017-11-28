@@ -126,16 +126,16 @@ void release_font(font_t *font){
 
 void print_header_infos(struct psf2_header header){
 
-	fprintf(stdout, "Entete PSF2:\n");
+	fprintf(stdout, "Header PSF2:\n");
 	fprintf(stdout, "\tMagic: %c%c%c%c\n", header.magic[3], header.magic[2],header.magic[1], header.magic[0]);
 	fprintf(stdout, "\tVersion: %d\n", header.version);
-	fprintf(stdout, "\tTaille de l'entete: %d\n", header.headersize);
+	fprintf(stdout, "\tHeader's size: %d\n", header.headersize);
 	fprintf(stdout, "\tFlags: %d -", header.flags);
 	if(header.flags && PSF2_HAS_UNICODE_TABLE) fprintf(stdout, " Has_unicode_table");
 	fprintf(stdout, "\n");
-	fprintf(stdout, "\tNb de glyphes: %d\n", header.length);
-	fprintf(stdout, "\tNb d'octets par caractère: %d\n", header.charsize);
-	fprintf(stdout, "\tTaille max des glyphes : %dx%d\n\n", header.height, header.width);
+	fprintf(stdout, "\tNumber of glyphs: %d\n", header.length);
+	fprintf(stdout, "\tNumber of bytes by character: %d\n", header.charsize);
+	fprintf(stdout, "\tMax size of glyphs: %dx%d\n\n", header.height, header.width);
 }
 
 /* returns a pointer on the data for the glyph on index "number" */

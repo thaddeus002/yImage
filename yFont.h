@@ -8,6 +8,8 @@
 /**
  * \file yFont.h
  * \brief font management.
+ *
+ * Reading functions for the PSF v2 font format.
  */
 
 #ifndef FONT_H_
@@ -46,7 +48,6 @@ struct psf2_header {
 	unsigned int length;        /* number of glyphs */
 	unsigned int charsize;      /* number of bytes for each character */
 	unsigned int height, width; /* max dimensions of glyphs */
-	/* charsize = height * ((width + 7) / 8) */
 };
 
 
@@ -75,11 +76,13 @@ int is_header_valid(struct psf2_header header);
 font_t *read_font(int *err, char *filename);
 
 /**
- * \brief free memory use by a font
+ * \brief free memory use by a font.
  */
 void release_font(font_t *font);
 
-
+/**
+ * \brief Print the header's content on stdout.
+ */
 void print_header_infos(struct psf2_header header);
 
 

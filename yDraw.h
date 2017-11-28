@@ -21,8 +21,8 @@
  * Y is zero at the top of image, and increase to the bottom.
  */
 typedef struct {
-  int X; /**< x coordinate */
-  int Y; /**< y coordinate from top to bottom */
+    int X; /**< x coordinate */
+    int Y; /**< y coordinate from top to bottom */
 } yPoint;
 
 

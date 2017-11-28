@@ -19,14 +19,14 @@
 
 
 /**
- * \brief Create a new image with transparent background and showing a given
- * text.
+ * \brief Create a new image with transparent background and showing a
+ * given text.
  * \param font the font to use
  * \param text the text to display
  * \param color the foreground color
  * \return a newly allocated image
  */
-yImage *create_text(font_t *font, char *text, yColor *color);
+yImage *y_create_text(font_t *font, char *text, yColor *color);
 
 
 /**
@@ -34,11 +34,23 @@ yImage *create_text(font_t *font, char *text, yColor *color);
  * \param fond the background image
  * \param x x position on the background image to begin writing
  * \param y y position on the background image to write
- * \param texte the text to display
+ * \param text the text to display
+ * \return 0 in case of success
+ */
+int y_display_text(yImage *fond, int x, int y, char *text);
+
+
+/**
+ * \brief Display a text in black on an existing image, using a
+ * specified font.
+ * \param fond the background image
+ * \param x x position on the background image to begin writing
+ * \param y y position on the background image to write
+ * \param text the text to display
  * \param font the font to use
  * \return 0 in case of success
  */
-int display_text(yImage *fond, int x, int y, char *texte, font_t *font);
+int y_display_text_with_font(yImage *fond, int x, int y, char *text, font_t *font);
 
 
 #endif

@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 
-yImage *create_text(font_t *font, char *text, yColor *color){
+yImage *y_create_text(font_t *font, char *text, yColor *color){
 
     int l;
     yImage *im;
@@ -65,8 +65,27 @@ yImage *create_text(font_t *font, char *text, yColor *color){
 }
 
 
+int y_display_text(yImage *fond, int x, int y, char *text) {
 
-int display_text(yImage *fond, int x, int y, char *texte, font_t *font){
+    int err;
+    font_t *font;
+
+    font = read_font(&err, NULL);
+
+    if(err != 0){
+        fprintf(stderr, "Error opening default font - Write failed\n");
+        return err;
+    }
+
+    err = y_display_text_with_font(fond, x, y, text, font);
+
+    release_font(font);
+
+    return err;
+}
+
+
+int y_display_text_with_font(yImage *fond, int x, int y, char *text, font_t *font){
 
     yImage *textIm;
     yColor black;
@@ -76,10 +95,12 @@ int display_text(yImage *fond, int x, int y, char *texte, font_t *font){
     black.g=0;
     black.alpha=255;
 
-    textIm=create_text(font, texte, &black);
+    textIm=y_create_text(font, text, &black);
 
     if(textIm==NULL) return 0;
 
     superpose_images(fond, textIm, x, y);
     return 0;
 }
+
+
