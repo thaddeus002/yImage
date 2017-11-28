@@ -35,7 +35,7 @@
  *            the filename for the data to read
  * \return a new yImage or NULL if the reading failed
  */
-yImage *load_ppm(const char *file);
+yImage *y_load_ppm(const char *file);
 
 
 /**
@@ -44,7 +44,7 @@ yImage *load_ppm(const char *file);
  *            the filename for the data to read
  * \return a new yImage or NULL if the reading failed
  */
-yImage *load_png(const char *file);
+yImage *y_load_png(const char *file);
 
 
 
@@ -59,7 +59,7 @@ yImage *load_png(const char *file);
  *            the filename of the file to create
  * \return 0 in case of success
  */
-int save_ppm(yImage *im, const char *file);
+int y_save_ppm(yImage *im, const char *file);
 
 
 /**
@@ -72,7 +72,7 @@ int save_ppm(yImage *im, const char *file);
  *            the filename of the file to create
  * \return 0 in case of success
  */
-int save_jpeg(yImage *im, const char *file);
+int y_save_jpeg(yImage *im, const char *file);
 
 
 /**
@@ -85,7 +85,7 @@ int save_jpeg(yImage *im, const char *file);
  *            the filename of the file to create
  * \return 0 in case of success
  */
-int save_png(yImage *im, const char *file);
+int y_save_png(yImage *im, const char *file);
 
 
 
@@ -99,7 +99,7 @@ int save_png(yImage *im, const char *file);
  *            the filename of the file to create
  * \return 0 in case of success
  */
-int save_tiff(yImage *im, const char *file);
+int y_save_tiff(yImage *im, const char *file);
 
 
 

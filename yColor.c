@@ -16,7 +16,7 @@
 #include <stdlib.h>
 
 
-void init_palette(yColorPalette_t palette, const uint8_t *pal){
+void y_init_palette(yColorPalette_t palette, const uint8_t *pal){
     int i, j; /* compteur */
 
     if(pal==NULL) return;
@@ -108,7 +108,7 @@ void y_init_color(yColor *color, unsigned int rgba){
  *
  * \return 0 if the colors are identical
  */
-int compare_colors(yColor *c1, yColor *c2) {
+int y_compare_colors(yColor *c1, yColor *c2) {
 
     int comp=0;
 

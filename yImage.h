@@ -61,7 +61,7 @@ typedef struct {
  * \param height the new image's height
  * \return a newly allocated yImage struct
  */
-yImage *create_yImage(int *err, const unsigned char *rgb_data, int width, int height);
+yImage *y_create_image(int *err, const unsigned char *rgb_data, int width, int height);
 
 
 /**
@@ -72,14 +72,14 @@ yImage *create_yImage(int *err, const unsigned char *rgb_data, int width, int he
  * \param height the new image's height
  * \return a newly allocated yImage struct
  */
-yImage *create_uniform_yImage(int *err, yColor *background, int width, int height);
+yImage *y_create_uniform_image(int *err, yColor *background, int width, int height);
 
 
 /**
  * \brief free memory.
  * \param im the struct to free
  */
-void destroy_yImage(yImage *im);
+void y_destroy_image(yImage *im);
 
 /************************************************************/
 /*                   HANDLING IMAGES                        */
@@ -101,7 +101,7 @@ yColor *y_get_color(yImage *im, int x, int y);
  * \param im the image to tranform
  * \return 0 in case of success, or a negative error code
  */
-int transp(yImage *im);
+int y_transp(yImage *im);
 
 
 /**
@@ -111,7 +111,7 @@ int transp(yImage *im);
  * \param x x coordinate of "back" for the top/left corner of "fore"
  * \param y y coordinate of "back" for the top/left corner of "fore"
  */
-void superpose_images(yImage *back, yImage *fore, int x, int y);
+void y_superpose_images(yImage *back, yImage *fore, int x, int y);
 
 
 /**
@@ -135,7 +135,7 @@ void y_grey_level_to_alpha(yImage *im);
  * \param x x coordinate of pixel : 0 is left border
  * \param y y coordinate of pixel : 0 is top border
  */
-void yImage_set_pixel(yImage *im, yColor *color, int x, int y);
+void y_set_pixel(yImage *im, yColor *color, int x, int y);
 
 
 

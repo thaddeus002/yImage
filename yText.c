@@ -29,8 +29,8 @@ yImage *y_create_text(font_t *font, char *text, yColor *color){
 
     l=strlen(text);
 
-    im=create_yImage(&err, NULL, font->header.width*l, font->header.height);
-    transp(im);
+    im=y_create_image(&err, NULL, font->header.width*l, font->header.height);
+    y_transp(im);
 
     for(i=0; i<l; i++){
         longCar=font->header.charsize;
@@ -44,7 +44,7 @@ yImage *y_create_text(font_t *font, char *text, yColor *color){
                 for(k=7; k>0; k--){
                     int p=((1<<k)&car[j]);
                     if(p) {
-                        yImage_set_pixel(im, color, (i*font->header.width)+(7-k), j);
+                        y_set_pixel(im, color, (i*font->header.width)+(7-k), j);
                     }
                 }
             }
@@ -54,7 +54,7 @@ yImage *y_create_text(font_t *font, char *text, yColor *color){
             for(j=0; j<longCar; j++){
                 int k;
                 for(k=7; k>0; k--){
-                    yImage_set_pixel(im, color, (i*font->header.width)+(7-k), j);
+                    y_set_pixel(im, color, (i*font->header.width)+(7-k), j);
                 }
             }
             fprintf(stderr, "Could not load the font's glyph number %d\n",text[i]);
@@ -99,7 +99,7 @@ int y_display_text_with_font(yImage *fond, int x, int y, char *text, font_t *fon
 
     if(textIm==NULL) return 0;
 
-    superpose_images(fond, textIm, x, y);
+    y_superpose_images(fond, textIm, x, y);
     return 0;
 }
 

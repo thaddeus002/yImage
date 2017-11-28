@@ -24,7 +24,7 @@
 
 
 /* create an yImage without transparency */
-yImage *create_yImage(int *err, const unsigned char *rgbData, int width, int height){
+yImage *y_create_image(int *err, const unsigned char *rgbData, int width, int height){
 
     yImage *im;
 
@@ -70,9 +70,9 @@ yImage *create_yImage(int *err, const unsigned char *rgbData, int width, int hei
 }
 
 
-yImage *create_uniform_yImage(int *err, yColor *background, int width, int height){
+yImage *y_create_uniform_image(int *err, yColor *background, int width, int height){
 
-    yImage *img = create_yImage(err, NULL, width, height);
+    yImage *img = y_create_image(err, NULL, width, height);
     int pix;
 
     for(pix=0; pix<width*height; pix++) {
@@ -90,7 +90,7 @@ yImage *create_uniform_yImage(int *err, yColor *background, int width, int heigh
 
 
 /* libération de la memoire */
-void destroy_yImage(yImage *im){
+void y_destroy_image(yImage *im){
     if(im!=NULL){
         if(im->rgbData!=NULL) free(im->rgbData);
         free(im);
@@ -129,7 +129,7 @@ yColor *y_get_color(yImage *im, int x, int y){
 
 
 /* rend l'image transparente */
-int transp(yImage *im){
+int y_transp(yImage *im){
     if(im==NULL) return -1;
 
     if(im->alphaChanel==NULL) im->alphaChanel=(unsigned char *)malloc(im->rgbWidth*im->rgbHeight);
@@ -144,7 +144,7 @@ int transp(yImage *im){
 
 
 
-void superpose_images(yImage *back, yImage *fore, int x, int y){
+void y_superpose_images(yImage *back, yImage *fore, int x, int y){
 
     yColor composition;
     int i, j;
@@ -170,14 +170,14 @@ void superpose_images(yImage *back, yImage *fore, int x, int y){
             yColor foreColor;
             y_set_color(&foreColor, rf, gf, bf, af);
 
-            if(!fore->presShapeColor || compare_colors(&(fore->shapeColor), &foreColor)) {
+            if(!fore->presShapeColor || y_compare_colors(&(fore->shapeColor), &foreColor)) {
                 /* TODO vraie superposition de couleurs */
                 composition.r=((255-af)*rb + af*rf)/255;
                 composition.b=((255-af)*bb + af*bf)/255;//af>0?bf:bb;
                 composition.g=((255-af)*gb + af*gf)/255;//af>0?gf:gb;
                 composition.alpha=ab+((255-ab)*af/255);
 
-                yImage_set_pixel(back, &composition, xb, yb);
+                y_set_pixel(back, &composition, xb, yb);
             }
         }
     }
@@ -209,7 +209,7 @@ void y_grey_level_to_alpha(yImage *im){
                     color->b=255;
                 }
                 color->alpha=m;
-                yImage_set_pixel(im, color, i, j);
+                y_set_pixel(im, color, i, j);
 
                 free(color);
             }
@@ -227,7 +227,7 @@ void y_grey_level_to_alpha(yImage *im){
 
 
 
-void yImage_set_pixel(yImage *im, yColor *color, int x, int y){
+void y_set_pixel(yImage *im, yColor *color, int x, int y){
     int pos; /* position of the pixel (x,y) in the data array */
 
     if(im==NULL) return;

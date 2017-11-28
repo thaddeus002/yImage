@@ -34,7 +34,7 @@
 
 
 
-int save_ppm(yImage *im, const char *file){
+int y_save_ppm(yImage *im, const char *file){
     FILE *f; /* file descriptor */
 
     f = fopen(file, "wb");
@@ -58,7 +58,7 @@ int save_ppm(yImage *im, const char *file){
 
 
 
-int save_jpeg(yImage *im, const char *file)
+int y_save_jpeg(yImage *im, const char *file)
 {
     #ifdef HAVE_LIBJPEG
     struct jpeg_compress_struct cinfo;
@@ -96,7 +96,7 @@ int save_jpeg(yImage *im, const char *file)
 
 
 
-int save_png(yImage *im, const char *file)
+int y_save_png(yImage *im, const char *file)
 {
     #ifdef HAVE_LIBPNG
     png_structp png_ptr;
@@ -189,7 +189,7 @@ int save_png(yImage *im, const char *file)
 
 
 
-int save_tiff(yImage *im, const char *file)
+int y_save_tiff(yImage *im, const char *file)
 {
     #ifdef HAVE_LIBTIFF
     TIFF               *tif;
@@ -248,7 +248,7 @@ static void ignore_comments(FILE *stream) {
 }
 
 
-yImage *load_ppm(const char *file) {
+yImage *y_load_ppm(const char *file) {
 
     FILE *f; /* file descriptor */
     yImage *im;
@@ -299,12 +299,12 @@ yImage *load_ppm(const char *file) {
         }
 
 
-        im = create_yImage(&err, NULL, w, h);
+        im = y_create_image(&err, NULL, w, h);
         r=fread(im->rgbData, w * h * 3, 1, f);
 
         if(r != 1) {
             fprintf(stderr, "Reading PPM file %s : Unexpected end of file\n", file);
-            destroy_yImage(im);
+            y_destroy_image(im);
             im = NULL;
         }
 
@@ -319,7 +319,7 @@ yImage *load_ppm(const char *file) {
 
 static yImage *LoadPNG(FILE *f);
 
-yImage *load_png(const char *file) {
+yImage *y_load_png(const char *file) {
 
     FILE *fd;
     yImage *im = NULL;
@@ -410,7 +410,7 @@ static yImage *LoadPNG(FILE *f)
 
     if (lines == NULL)
     {
-        destroy_yImage(im);
+        y_destroy_image(im);
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         return NULL;
     }
@@ -421,7 +421,7 @@ static yImage *LoadPNG(FILE *f)
         {
             int n;
 
-            destroy_yImage(im);
+            y_destroy_image(im);
 
             for (n = 0; n < i; n++)
                 free(lines[n]);
@@ -437,7 +437,7 @@ static yImage *LoadPNG(FILE *f)
 
 
     /* allocate memory for yImage structure */
-    im=create_yImage(&err, NULL, width, height);
+    im=y_create_image(&err, NULL, width, height);
     if(im==NULL)
     {
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
@@ -517,8 +517,9 @@ static yImage *LoadPNG(FILE *f)
     }
 
     /* Freing memory */
-    for (i = 0; i < im->rgbHeight; i++)
+    for (i = 0; i < im->rgbHeight; i++) {
         free(lines[i]);
+    }
     free(lines);
 
     /* End */

@@ -52,7 +52,7 @@ typedef enum{BLACK=0, WHITE, RED, GREEN, BLUE, ORANGE_, YELLOW, CYAN_, MAGENTA_,
  * \param palette the objet to init
  * \param pal the source data
  */
-void init_palette(yColorPalette_t palette, const uint8_t *pal);
+void y_init_palette(yColorPalette_t palette, const uint8_t *pal);
 
 
 /**
@@ -103,7 +103,7 @@ void y_init_color(yColor *color, unsigned int rgba);
  * \param c2 the second color to compare
  * \return 0 if the colors are identical
  */
-int compare_colors(yColor *c1, yColor *c2);
+int y_compare_colors(yColor *c1, yColor *c2);
 
 
 
