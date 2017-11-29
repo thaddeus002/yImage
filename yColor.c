@@ -69,11 +69,11 @@ yColor *y_color(ySimpleColor color){
     case ORANGE_:
         r=255; g=160; b=0; break;
     case YELLOW:
-        r=0; g=255; b=255; break;
-    case CYAN_:
-        r=255; g=0; b=255; break;
-    case MAGENTA_:
         r=255; g=255; b=0; break;
+    case CYAN_:
+        r=0; g=255; b=255; break;
+    case MAGENTA_:
+        r=255; g=0; b=255; break;
     case MARRON_:
         r=112; g=80; b=0; break;
     default:
