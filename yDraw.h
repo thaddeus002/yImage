@@ -67,6 +67,16 @@ int y_draw_line(yImage *im, yPoint M, yPoint N, yColor c);
 void y_draw_lines(yImage *im, yColor *color, yPoint *points, int nbPoints);
 
 
+/**
+ * \brief fill a polygon with a uniform color.
+ *
+ * Use the even-odd rule.
+ * \param im the image where to draw
+ * \param color the color for inside the polygon
+ * \param points a points table fo polygon 's corners
+ * \param nbPoints size of the points table
+ */
+void y_fill_polygon(yImage *im, yColor color, yPoint *points, int nbPoints);
 
 
 #endif

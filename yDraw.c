@@ -150,3 +150,102 @@ void y_draw_lines(yImage *im, yColor *color, yPoint *points, int nbPoints){
     }
 }
 
+
+/**
+ * Find the "bounding box" of a polygon, within an image.
+ * \param image the image in which there is a polygon
+ * \param bounds a pre-allocated array of points of size 2
+ * \param points the polygon's cormers
+ * \param nbPoints the number of points in the polygon
+ */
+static void find_boundaries(yImage *image, yPoint *bounds, yPoint *points, int nbPoints) {
+
+    yPoint *min = bounds;
+    yPoint *max = bounds+1;
+    int i;
+
+    min->X=image->rgbWidth+1;
+    min->Y=image->rgbHeight+1;
+    max->X=-1;
+    max->Y=-1;
+
+    for(i=0; i<nbPoints; i++) {
+        yPoint *point = points+i;
+
+        if(point->X > max->X) {
+            max->X=point->X;
+        }
+
+        if(point->X < min->X) {
+            min->X=point->X;
+        }
+
+        if(point->Y > max->Y) {
+            max->Y=point->Y;
+        }
+
+        if(point->Y < min->Y) {
+            min->Y=point->Y;
+        }
+    }
+}
+
+
+/*
+ * Use the even-odd rule. The SVG specification says:
+ * This rule determines the "insideness" of a point on the canvas by
+ * drawing a ray from that point to infinity in any direction and
+ * counting the number of path segments from the given shape that the
+ * ray crosses. If this number is odd, the point is inside; if even,
+ * the point is outside.
+ *
+ * For this implementation we increase x to infinite, y remaining
+ * constant.
+ */
+static int is_point_in_polygon(yPoint P, yPoint *points, int nbPoints){
+
+    int i, j;
+    int c;
+
+    j=nbPoints-1;
+    c=0;
+
+    for(i=0; i<nbPoints; i++) {
+
+        if( ((points[i].Y > P.Y) != (points[j].Y > P.Y)) &&
+            (P.X < points[i].X + (points[j].X - points[i].X) * (P.Y - points[i].Y) / (points[j].Y - points[i].Y))
+        ) {
+            c=!c;
+        }
+
+        j=i;
+    }
+
+    return c;
+}
+
+
+void y_fill_polygon(yImage *im, yColor color, yPoint *points, int nbPoints){
+
+    yPoint bounds[2];
+    int x, y;
+
+    find_boundaries(im, bounds, points, nbPoints);
+
+    if(bounds[0].X > bounds[1].X || bounds[0].Y > bounds[1].Y) {
+        // An error occured while findind boundaries
+        return;
+    }
+
+    for(x=bounds[0].X; x<=bounds[1].X; x++) {
+        for(y=bounds[0].Y; y<=bounds[1].Y; y++) {
+            yPoint P;
+            P.X=x;
+            P.Y=y;
+            if(is_point_in_polygon(P, points, nbPoints)) {
+                y_draw_point(im, P, color);
+            }
+        }
+    }
+}
+
