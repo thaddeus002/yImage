@@ -31,7 +31,7 @@ typedef struct {
  * \param im the image to modify
  * \param c the new color to use
  */
-int y_fill_image(yImage *im, yColor c);
+int y_fill_image(yImage *im, yColor *c);
 
 
 
@@ -42,7 +42,7 @@ int y_fill_image(yImage *im, yColor c);
  * \param c the new color for the point
  * \return 1 if a point were really drawn
  */
-int y_draw_point(yImage *im, yPoint P, yColor c);
+int y_draw_point(yImage *im, yPoint P, yColor *c);
 
 
 
@@ -54,7 +54,7 @@ int y_draw_point(yImage *im, yPoint P, yColor c);
  * \param color the color for the line
  * \return
  */
-int y_draw_line(yImage *im, yPoint M, yPoint N, yColor c);
+int y_draw_line(yImage *im, yPoint M, yPoint N, yColor *c);
 
 
 /**
@@ -76,7 +76,7 @@ void y_draw_lines(yImage *im, yColor *color, yPoint *points, int nbPoints);
  * \param points a points table fo polygon 's corners
  * \param nbPoints size of the points table
  */
-void y_fill_polygon(yImage *im, yColor color, yPoint *points, int nbPoints);
+void y_fill_polygon(yImage *im, yColor *color, yPoint *points, int nbPoints);
 
 
 #endif

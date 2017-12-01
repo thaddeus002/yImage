@@ -26,7 +26,17 @@
 
 
 
-/** \brief Represents a color */
+/**
+ * \brief Represents a color
+ *
+ * A color is the composition of the three basic colors (Red, Blue and
+ * Green). The levels of each of these basic colors are on one bytes (
+ * between 0 and 255), allowing up to 16 millions colors.
+ *
+ * A color also as an alpha value (0 to 255), which is a level of
+ * opacity. An alpha value of 255 define a "normal" color, while a value
+ * of 0 if for transparent pixels.
+ */
 typedef struct _yColor {
     unsigned char r, g, b; /**< Red, green and blue levels, between 0 and 255 */
     unsigned char alpha; /**< alpha 0 => transparency ; 255 => opacity */
@@ -37,7 +47,7 @@ typedef struct _yColor {
 typedef uint8_t yColorPalette_t[256*3];
 
 /** \brief enumeration of basics color to direct access */
-typedef enum{BLACK=0, WHITE, RED, GREEN, BLUE, ORANGE_, YELLOW, CYAN_, MAGENTA_, MARRON_} ySimpleColor;
+typedef enum{BLACK=0, WHITE, RED, GREEN, BLUE, ORANGE, YELLOW, CYAN, MAGENTA, MARRON} ySimpleColor;
 
 
 
@@ -56,7 +66,7 @@ void y_init_palette(yColorPalette_t palette, const uint8_t *pal);
 
 
 /**
- * Get a color on the palette.
+ * \brief Get a color on the palette.
  * \param color a allocated struct to get the result
  * \param palette the palette
  * \param index the index of the color we want (between 0 and 255)

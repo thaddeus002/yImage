@@ -66,15 +66,15 @@ yColor *y_color(ySimpleColor color){
         r=0; g=255; b=0; break;
     case BLUE:
         r=0; g=0; b=255; break;
-    case ORANGE_:
+    case ORANGE:
         r=255; g=160; b=0; break;
     case YELLOW:
         r=255; g=255; b=0; break;
-    case CYAN_:
+    case CYAN:
         r=0; g=255; b=255; break;
-    case MAGENTA_:
+    case MAGENTA:
         r=255; g=0; b=255; break;
-    case MARRON_:
+    case MARRON:
         r=112; g=80; b=0; break;
     default:
         r=0; g=0; b=0;
@@ -104,10 +104,6 @@ void y_init_color(yColor *color, unsigned int rgba){
 
 
 
-/**
- *
- * \return 0 if the colors are identical
- */
 int y_compare_colors(yColor *c1, yColor *c2) {
 
     int comp=0;

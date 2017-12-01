@@ -15,15 +15,15 @@
 #include "yDraw.h"
 
 
-int y_fill_image(yImage *im, yColor c){
+int y_fill_image(yImage *im, yColor *c){
 
     int i; /* counter */
 
     for(i=0; i<im->rgbWidth*im->rgbHeight; i++){
-        im->rgbData[3*i]=c.r;
-        im->rgbData[3*i+1]=c.g;
-        im->rgbData[3*i+2]=c.b;
-        im->alphaChanel[i]=c.alpha;
+        im->rgbData[3*i]=c->r;
+        im->rgbData[3*i+1]=c->g;
+        im->rgbData[3*i+2]=c->b;
+        im->alphaChanel[i]=c->alpha;
         im->presShapeColor=0;
     }
 
@@ -47,21 +47,21 @@ static int convert_point_to_index(yImage *im, yPoint P){
 }
 
 
-int y_draw_point(yImage *im, yPoint P, yColor c){
+int y_draw_point(yImage *im, yPoint P, yColor *c){
 
     int index = convert_point_to_index(im, P);
 
     if(index < 0) return 0;
 
-    if((im->presShapeColor==1) && (c.alpha=0)){
+    if((im->presShapeColor==1) && (c->alpha=0)){
         im->rgbData[3*index]=im->shapeColor.r;
         im->rgbData[3*index+1]=im->shapeColor.g;
         im->rgbData[3*index+2]=im->shapeColor.b;
     } else {
-        im->rgbData[3*index]=c.r;
-        im->rgbData[3*index+1]=c.g;
-        im->rgbData[3*index+2]=c.b;
-        im->alphaChanel[index]=c.alpha;
+        im->rgbData[3*index]=c->r;
+        im->rgbData[3*index+1]=c->g;
+        im->rgbData[3*index+2]=c->b;
+        im->alphaChanel[index]=c->alpha;
     }
 
     return 1;
@@ -69,7 +69,7 @@ int y_draw_point(yImage *im, yPoint P, yColor c){
 
 
 
-int y_draw_line(yImage *im, yPoint M, yPoint N, yColor c){
+int y_draw_line(yImage *im, yPoint M, yPoint N, yColor *c){
 
     int orientation; /* 1 if Delta X > Delta Y, 0 otherwise */
     int deltaX;
@@ -133,7 +133,7 @@ void y_draw_lines(yImage *im, yColor *color, yPoint *points, int nbPoints){
     if(nbPoints == 0) return;
 
     if(nbPoints == 1) {
-        y_draw_point(im, points[0], *color);
+        y_draw_point(im, points[0], color);
         return;
     }
 
@@ -146,7 +146,7 @@ void y_draw_lines(yImage *im, yColor *color, yPoint *points, int nbPoints){
         pointJ.X = points[i+1].X;
         pointJ.Y = points[i+1].Y;
 
-        y_draw_line(im, pointI, pointJ, *color);
+        y_draw_line(im, pointI, pointJ, color);
     }
 }
 
@@ -225,7 +225,7 @@ static int is_point_in_polygon(yPoint P, yPoint *points, int nbPoints){
 }
 
 
-void y_fill_polygon(yImage *im, yColor color, yPoint *points, int nbPoints){
+void y_fill_polygon(yImage *im, yColor *color, yPoint *points, int nbPoints){
 
     yPoint bounds[2];
     int x, y;
