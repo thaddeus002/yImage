@@ -85,22 +85,43 @@ int y_display_text(yImage *fond, int x, int y, char *text) {
 }
 
 
+int y_display_text_with_color(yImage *fond, int x, int y, char *text, yColor *color) {
+
+    int err;
+    font_t *font;
+
+    font = read_font(&err, NULL);
+
+    if(err != 0){
+        fprintf(stderr, "Error opening default font - Write failed\n");
+        return err;
+    }
+
+    err = y_display_text_with_font_and_color(fond, x, y, text, font, color);
+
+    release_font(font);
+
+    return err;
+}
+
 int y_display_text_with_font(yImage *fond, int x, int y, char *text, font_t *font){
 
-    yImage *textIm;
     yColor black;
 
-    black.r=0;
-    black.b=0;
-    black.g=0;
-    black.alpha=255;
+    y_set_color(&black, 0, 0, 0, 255);
+    return y_display_text_with_font_and_color(fond, x, y, text, font, &black);
+}
 
-    textIm=y_create_text(font, text, &black);
+
+int y_display_text_with_font_and_color(yImage *fond, int x, int y, char *text, font_t *font, yColor *color){
+
+    yImage *textIm;
+
+    textIm=y_create_text(font, text, color);
 
     if(textIm==NULL) return 0;
 
     y_superpose_images(fond, textIm, x, y);
     return 0;
 }
-
 
