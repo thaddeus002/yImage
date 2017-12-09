@@ -30,6 +30,17 @@ To generated the static library file `yImage.a`, simply do :
 $ make
 ```
 
+By default, only PNG is supported, use
+
+```sh
+$ HAVE_JPEG=yes make
+```
+or
+```sh
+$ HAVE_TIFF=yes make
+```
+
+To add JPEG or TIFF support.
 And then to install it in `/usr/local/lib` and the headers files in `/usr/local/include` :
 
 ``` sh

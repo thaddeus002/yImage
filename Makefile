@@ -3,9 +3,17 @@ ifndef PREFIX
 PREFIX=/usr/local
 endif
 
+ifndef HAVE_PNG
 HAVE_LIBPNG=yes
-HAVE_LIBTIFF=yes
-HAVE_LIBJPEG=yes
+endif
+
+ifndef HAVE_LIBTIFF
+HAVE_LIBTIFF=no
+endif 
+
+ifndef HAVE_LIBJPEG
+HAVE_LIBJPEG=no
+endif
 
 INCLUDEPNG=-I/usr/local/include
 INCLUDEJPEG=-I/usr/include
