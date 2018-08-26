@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
         N.X=w;
         M.Y=font->header.height * 16;
         N.Y=font->header.height * 16;
-        y_draw_line(image,M,N,*sep);
+        y_draw_line(image,M,N,sep);
         free(sep);
     }
 

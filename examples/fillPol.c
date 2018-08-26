@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     hexagon(polygon);
 
     fore = y_color(YELLOW);
-    y_fill_polygon(image,*fore,polygon,6);
+    y_fill_polygon(image,fore,polygon,6);
     free(fore);
 
     y_save_png(image, "fillPol.png");
