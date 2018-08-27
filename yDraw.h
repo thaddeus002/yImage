@@ -78,5 +78,25 @@ void y_draw_lines(yImage *im, yColor *color, yPoint *points, int nbPoints);
  */
 void y_fill_polygon(yImage *im, yColor *color, yPoint *points, int nbPoints);
 
+/**
+ * \brief draw a circle.
+ *
+ * \param im the image where to draw
+ * \param color the circle's color
+ * \param center the circle's center
+ * \param radius number of pixels for the radius
+ */
+void y_draw_circle(yImage *im, yColor *color, yPoint center, int radius);
+
+
+/**
+ * \brief draw a filled circle.
+ *
+ * \param im the image where to draw
+ * \param color the circle's color
+ * \param center the circle's center
+ * \param radius number of pixels for the radius
+ */
+void y_fill_circle(yImage *im, yColor *color, yPoint center, int radius);
 
 #endif

@@ -249,3 +249,87 @@ void y_fill_polygon(yImage *im, yColor *color, yPoint *points, int nbPoints){
     }
 }
 
+
+static yPoint translate(yPoint origin, int x, int y) {
+    yPoint translated;
+    translated.X=origin.X + x;
+    translated.Y=origin.Y + y;
+    return translated;
+}
+
+/*
+ * This algorithm draws all eight octants simultaneously, starting from each
+ * cardinal direction (0°, 90°, 180°, 270°) and extends both ways to reach
+ * the nearest multiple of 45° (45°, 135°, 225°, 315°). It can determine
+ * where to stop because when y = x, it has reached 45°. Between 0 and 45°,
+ * as y increases, it does not skip nor repeat any y value until reaching
+ * 45°. So during the while loop, y increments by 1 each iteration, and x
+ * decrements by 1 on occasion, never exceeding 1 in one iteration.
+ */
+void y_draw_circle(yImage *im, yColor *color, yPoint center, int radius) {
+
+    int x = radius - 1;
+    int y = 0;
+    int dx = 1;
+    int dy = 1;
+    int err = dx - (radius << 1);
+
+    while(x>=y) {
+        y_draw_point(im, translate(center, x, y) , color);
+        y_draw_point(im, translate(center, y, x) , color);
+        y_draw_point(im, translate(center, -y, x) , color);
+        y_draw_point(im, translate(center, -x, y) , color);
+        y_draw_point(im, translate(center, -x, -y) , color);
+        y_draw_point(im, translate(center, -y, -x) , color);
+        y_draw_point(im, translate(center, y, -x) , color);
+        y_draw_point(im, translate(center, x, -y) , color);
+
+        if (err <= 0)
+        {
+            y++;
+            err += dy;
+            dy += 2;
+        }
+
+        if (err > 0)
+        {
+            x--;
+            dx += 2;
+            err += dx - (radius << 1);
+        }
+    }
+}
+
+
+static int dist_square(yPoint *M, yPoint *N) {
+    return (M->X-N->X)*(M->X-N->X) + (M->Y-N->Y)*(M->Y-N->Y);
+}
+
+
+void y_fill_circle(yImage *im, yColor *color, yPoint center, int radius) {
+
+    yPoint bounds[2];
+    int x, y;
+
+    if(radius < 0) {
+        radius = -radius;
+    }
+
+    bounds[0].X=center.X-radius;
+    bounds[1].X=center.X+radius;
+    bounds[0].Y=center.Y-radius;
+    bounds[1].Y=center.Y+radius;
+
+    for(x=bounds[0].X; x<=bounds[1].X; x++) {
+        for(y=bounds[0].Y; y<=bounds[1].Y; y++) {
+            yPoint P;
+            P.X=x;
+            P.Y=y;
+            int r2 = radius*radius;
+            if(dist_square(&P, &center) <= r2) {
+                y_draw_point(im, P, color);
+            }
+        }
+    }
+}
+

@@ -12,6 +12,8 @@ The aim of this library is to provide basic drawing feature while remaining simp
  *  Image superposition, like using calcs
  *  Draw lines and polygons
  *  Fill polygons
+ *  Draw circles
+ *  Draw filled circles
  *  Write text
 
 ## dependencies
