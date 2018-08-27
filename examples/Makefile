@@ -1,22 +1,28 @@
 
-PREFIX=/home/yannick/.local
+PREFIX=..
+LIBDIR=$(PREFIX)
+INCDIR=$(PREFIX)
+LDFLAGS=-L$(LIBDIR) -lyImage -lpng -lz -ljpeg -ltiff
 
 EXAMPLES=hello draw_font fillPol png2ppm ppm2jpeg
 
 all: $(EXAMPLES)
 
-hello: hello.c
+hello: hello.c ../libyImage.a
 
-draw_font: draw_font.c
+draw_font: draw_font.c ../libyImage.a
 
-fillPol: fillPol.c
+fillPol: fillPol.c ../libyImage.a
 
-png2ppm: png2ppm.c
+png2ppm: png2ppm.c ../libyImage.a
 
-ppm2jpeg: ppm2jpeg.c
+ppm2jpeg: ppm2jpeg.c ../libyImage.a
 
 $(EXAMPLES):
-	gcc -o $@ $< -I$(PREFIX)/include -L$(PREFIX)/lib -lyImage -lpng -lz -ljpeg -ltiff
+	gcc -o $@ $< -I$(INCDIR) $(LDFLAGS)
+
+../libyImage.a:
+	make -C ..
 
 mrproper:
 	rm -f $(EXAMPLES)
