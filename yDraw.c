@@ -326,7 +326,7 @@ void y_fill_circle(yImage *im, yColor *color, yPoint center, int radius) {
             P.X=x;
             P.Y=y;
             int r2 = radius*radius;
-            if(dist_square(&P, &center) <= r2) {
+            if(dist_square(&P, &center) < r2) {
                 y_draw_point(im, P, color);
             }
         }
