@@ -70,7 +70,7 @@ int y_display_text(yImage *fond, int x, int y, char *text) {
     int err;
     font_t *font;
 
-    font = read_font(&err, NULL);
+    font = read_default_font(&err);
 
     if(err != 0){
         fprintf(stderr, "Error opening default font - Write failed\n");
@@ -90,7 +90,7 @@ int y_display_text_with_color(yImage *fond, int x, int y, char *text, yColor *co
     int err;
     font_t *font;
 
-    font = read_font(&err, NULL);
+    font = read_default_font(&err);
 
     if(err != 0){
         fprintf(stderr, "Error opening default font - Write failed\n");

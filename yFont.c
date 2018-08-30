@@ -70,6 +70,10 @@ static char *getFontFilename(char *filename) {
 }
 
 
+font_t *read_default_font(int *err) {
+    return read_font(getFontFilename(NULL);
+}
+
 
 font_t *read_font(int *err, char *filename){
 
@@ -77,13 +81,10 @@ font_t *read_font(int *err, char *filename){
 	FILE *fd;
 	int taille_data;
 	int nb_lus;
-	char *fontFilename;
 
 	*err=0;
 
-    fontFilename = getFontFilename(filename);
-
-	fd=fopen(fontFilename, "r");
+	fd=fopen(filename, "r");
 
 	if(fd==NULL){
 		*err=Y_ERR_FILE_NOT_FOUND;

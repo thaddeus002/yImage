@@ -61,6 +61,17 @@ int is_header_valid(struct psf2_header header);
  */
 font_t *read_font(int *err, char *filename);
 
+
+/**
+ * \brief Init the default font.
+ * \param err a pointer to an integer to put the error code
+ * \return a newly allocated font struct
+ */
+font_t *read_default_font(int *err) {
+    return read_font(getFontFilename(NULL);
+}
+
+
 /**
  * \brief free memory use by a font.
  */
