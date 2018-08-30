@@ -54,24 +54,14 @@ int is_header_valid(struct psf2_header header){
 }
 
 
-static char *getFontFilename(char *filename) {
-
-    if(filename != NULL) {
-        // test if file exists, and we can read it
-        FILE *fd = fopen(filename, "r");
-        if(fd != NULL) {
-            fclose(fd);
-            return filename;
-        }
-    }
-
+static char *getDefaultFontFilename() {
     sprintf(FontFileName, "%s/share/consolefonts/%s", INSTALL_DIR, DEFAULT_FONT);
     return FontFileName;
 }
 
 
 font_t *read_default_font(int *err) {
-    return read_font(getFontFilename(NULL);
+    return read_font(err, getDefaultFontFilename());
 }
 
 
