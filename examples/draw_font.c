@@ -28,7 +28,11 @@ int main(int argc, char **argv) {
         fontfile = argv[1];
     }
 
-    font = read_font(&err, fontfile);
+    if(fontfile != NULL) {
+        font = read_font(&err, fontfile);
+    } else {
+        font = read_default_font(&err);
+    }
 
     if(err) {
         fprintf(stderr, "Reading font : error %d\n", err);

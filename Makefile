@@ -59,8 +59,7 @@ all: libyImage.a
 %.o: %.c %.h
 	$(CC) -c $(CFLAGS) $<
 
-yFont.o: yFont.c yFont.h
-	$(CC) -c $(CFLAGS) -DINSTALL_DIR=\"$(PREFIX)\" $<
+yFont.o: yFont.c yFont.h yLat1-14.h
 
 libyImage.a: $(OBJS)
 	@echo "Creating the static library"
@@ -78,8 +77,6 @@ mrproper: clean
 install: libyImage.a
 	install -m 0640 libyImage.a $(PREFIX)/lib/
 	install -m 0640 $(HEADERS) $(PREFIX)/include/
-	mkdir -p $(PREFIX)/share/consolefonts
-	install -m 640 yLat1-14.psfu $(PREFIX)/share/consolefonts
 
 uninstall:
 	rm -f $(PREFIX)/lib/libyImage.a
@@ -89,7 +86,6 @@ uninstall:
 	rm -f $(PREFIX)/include/yDraw.h
 	rm -f $(PREFIX)/include/yFont.h
 	rm -f $(PREFIX)/include/yText.h
-	rm -f $(PREFIX)/share/consolefonts/yLat1-14.psfu
 
 exec: $(EXEC)
 

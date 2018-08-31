@@ -13,16 +13,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "yFont.h"
-
-#ifndef INSTALL_DIR
-/* the prefix for fonts file installation */
-#define INSTALL_DIR "/usr"
-#endif
-
-#define DEFAULT_FONT "yLat1-14.psfu"
-
-static char FontFileName[4000];
+#include "yLat1-14.h"
 
 
 #define PSF2_MAGIC0     0x72
@@ -54,14 +47,47 @@ int is_header_valid(struct psf2_header header){
 }
 
 
-static char *getDefaultFontFilename() {
-    sprintf(FontFileName, "%s/share/consolefonts/%s", INSTALL_DIR, DEFAULT_FONT);
-    return FontFileName;
+/**
+ * Read the font in an array of unsigned char.
+ */
+static font_t *read_array_font(int *err, unsigned char *binary) {
+
+	font_t *font;
+	int data_size;
+
+	*err=0;
+
+	font = malloc(sizeof(font_t));
+	if(font==NULL){
+		*err=Y_ERR_ALLOCATE_FAIL;
+		return(NULL);
+	}
+
+    memcpy(&(font->header), binary, sizeof(struct psf2_header)); 
+
+	if(!is_header_valid(font->header)){
+		*err=Y_ERR_BAD_FILE;
+		free(font);
+		return(NULL);
+	}
+
+	data_size=sizeof(unsigned char)*(font->header.length*font->header.charsize);
+	font->glyphs=malloc(data_size);
+
+	if(font->glyphs==NULL){
+		*err=Y_ERR_ALLOCATE_FAIL;
+		free(font);
+		return(NULL);
+	}
+
+    memcpy(font->glyphs, binary+sizeof(struct psf2_header), data_size);
+
+	return(font);
 }
 
 
 font_t *read_default_font(int *err) {
-    return read_font(err, getDefaultFontFilename());
+    return read_array_font(err, yLat1_14_psfu);
 }
 
 
@@ -69,7 +95,7 @@ font_t *read_font(int *err, char *filename){
 
 	font_t *font;
 	FILE *fd;
-	int taille_data;
+	int data_size;
 	int nb_lus;
 
 	*err=0;
@@ -97,8 +123,8 @@ font_t *read_font(int *err, char *filename){
 		return(NULL);
 	}
 
-	taille_data=sizeof(unsigned char)*(font->header.length*font->header.charsize);
-	font->glyphs=malloc(taille_data);
+	data_size=sizeof(unsigned char)*(font->header.length*font->header.charsize);
+	font->glyphs=malloc(data_size);
 
 	if(font->glyphs==NULL){
 		*err=Y_ERR_ALLOCATE_FAIL;
@@ -107,7 +133,7 @@ font_t *read_font(int *err, char *filename){
 		return(NULL);
 	}
 
-	nb_lus=fread(font->glyphs, taille_data, 1, fd);
+	nb_lus=fread(font->glyphs, data_size, 1, fd);
 
 	if(nb_lus<1){
 		*err=Y_ERR_BAD_FILE;
