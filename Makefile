@@ -52,8 +52,6 @@ CFLAGS = -Wall -O2 -s $(INCLUDEDIR) $(OPTIONS)
 OBJS=yImage.o yColor.o yImage_io.o yDraw.o yFont.o yText.o
 HEADERS=yImage.h yColor.h yImage_io.h yDraw.h yFont.h yText.h
 
-EXEC=test test_dessin test_graphique test_font fillIm trace_graphe
-
 all: libyImage.a
 
 %.o: %.c %.h
@@ -72,7 +70,7 @@ clean:
 	rm -f *.o *.a
 
 mrproper: clean
-	rm -f $(EXEC)
+
 
 install: libyImage.a
 	install -m 0640 libyImage.a $(PREFIX)/lib/
@@ -92,17 +90,3 @@ exec: $(EXEC)
 doc:
 	doxygen
 
-test_dessin: test_dessin.c libyImage.a
-	$(CC) $(CFLAGS) test_dessin.c -o test_dessin -L. -lyImage $(LIBS)
-
-test_graphique: test_graphique.c libyImage.a
-	$(CC) $(CFLAGS) test_graphique.c -o test_graphique -L. -lyImage $(LIBS)
-
-test_font: test_font.c libyImage.a
-	$(CC) $(CFLAGS) test_font.c -o test_font -L. -lyImage $(LIBS)
-
-fillIm: fillIm.c libyImage.a
-	$(CC) $(CFLAGS) fillIm.c -o fillIm -L. -lyImage $(LIBS)
-
-trace_graphe: trace_graphe.c libyImage.a
-	$(CC) -I/usr/local/yannick/include $(CFLAGS) trace_graphe.c -o trace_graphe -L. -lyImage -L/usr/local/lib -L/usr/local/yannick/lib -lcsv $(LIBS)
