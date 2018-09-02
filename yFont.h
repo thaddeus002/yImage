@@ -27,20 +27,20 @@
 
 
 struct psf2_header {
-	unsigned char magic[4];
-	unsigned int version;
-	unsigned int headersize;    /* offset of bitmaps in file */
-	unsigned int flags;
-	unsigned int length;        /* number of glyphs */
-	unsigned int charsize;      /* number of bytes for each character */
-	unsigned int height, width; /* max dimensions of glyphs */
+    unsigned char magic[4];
+    unsigned int version;
+    unsigned int headersize;    /* offset of bitmaps in file */
+    unsigned int flags;
+    unsigned int length;        /* number of glyphs */
+    unsigned int charsize;      /* number of bytes for each character */
+    unsigned int height, width; /* max dimensions of glyphs */
 };
 
 
 
 typedef struct {
-	struct psf2_header header;
-	unsigned char *glyphs;
+    struct psf2_header header;
+    unsigned char *glyphs;
 } font_t;
 
 
