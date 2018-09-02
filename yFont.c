@@ -8,6 +8,27 @@
 /**
  * \file yFont.c
  * \brief font management.
+ *
+ * This can handle fonts in the PSF2 format.
+ * 
+ * The fonts here are bitmap fonts (not, for example, vector fonts), and
+ * each glyph has a height and a width. The bitmap for a glyph is stored
+ * as height consecutive pixel rows, where each pixel row consists of
+ * width bits followed by some filler bits in order to fill an integral
+ * number of (8-bit) bytes. Altogether the bitmap of a glyph takes
+ * charsize bytes.
+ *
+ * The number of glyphs in the font equals length.
+ *
+ * The font is followed by a table associating Unicode values with each
+ * glyph in case the PSF2_HAS_UNICODE_TABLE bit is set in the flags
+ * field.
+ *
+ * The starting offset of the bitmaps in the font file is given by
+ * headersize.
+ *
+ * The integers in the psf2 header struct are little endian 4-byte
+ * integers.
  */
 
 
@@ -173,12 +194,42 @@ void print_header_infos(struct psf2_header header){
 }
 
 /* returns a pointer on the data for the glyph on index "number" */
+/* TODO make this static */
 unsigned char *get_character(font_t *font, int number){
 
-	if(number>=font->header.length) return NULL;
 
 	if(font->glyphs==NULL) return NULL;
 
-	return(font->glyphs+(font->header.charsize)*number);
+	if(number <= 127) {
+		return(font->glyphs+(font->header.charsize)*number);
+	}
+
+	/* Use the default glyph for non ASCII character */
+	return(font->glyphs);
 }
 
+
+unsigned char *get_glyph(font_t *font, char *character, int *nbBytes){
+
+	int first = (unsigned char) character[0];
+	*nbBytes = 1;
+	int scalar = first;
+
+	if(first <= 127) {
+		return get_character(font, first);
+	}
+
+	if(first >> 5 == 6) {
+		*nbBytes = 2;
+	} else if (first >> 4 == 14) {
+		*nbBytes = 3;
+	} else if (first >> 3 == 30) {
+		*nbBytes = 4;
+	}
+
+	int i;
+	for (i=1; i < *nbBytes; i++) {
+		scalar = scalar * 256 + (unsigned char) character[i];
+	}
+	return get_character(font, scalar);
+}

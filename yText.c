@@ -32,9 +32,11 @@ yImage *y_create_text(font_t *font, char *text, yColor *color){
     im=y_create_image(&err, NULL, font->header.width*l, font->header.height);
     y_transp(im);
 
-    for(i=0; i<l; i++){
+    int nb;
+    int pos = 0;
+    for(i=0; i<l; i=i+nb){
         longCar=font->header.charsize;
-        car=get_character(font, (unsigned char) text[i]);
+        car=get_glyph(font, text+i, &nb);
 
         if(car!=NULL){
             /* TODO : do this better */
@@ -44,7 +46,7 @@ yImage *y_create_text(font_t *font, char *text, yColor *color){
                 for(k=7; k>0; k--){
                     int p=((1<<k)&car[j]);
                     if(p) {
-                        y_set_pixel(im, color, (i*font->header.width)+(7-k), j);
+                        y_set_pixel(im, color, (pos*font->header.width)+(7-k), j);
                     }
                 }
             }
@@ -54,11 +56,12 @@ yImage *y_create_text(font_t *font, char *text, yColor *color){
             for(j=0; j<longCar; j++){
                 int k;
                 for(k=7; k>0; k--){
-                    y_set_pixel(im, color, (i*font->header.width)+(7-k), j);
+                    y_set_pixel(im, color, (pos*font->header.width)+(7-k), j);
                 }
             }
-            fprintf(stderr, "Could not load the font's glyph number %d\n",text[i]);
+            fprintf(stderr, "Could not load the font's glyph number %d\n",(unsigned char) text[i]);
         }
+        pos++;
     }
 
     return im;

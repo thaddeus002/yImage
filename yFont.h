@@ -83,7 +83,22 @@ void print_header_infos(struct psf2_header header);
 
 /**
  * \return a pointer on the data for the glyph on index "number"
+ * \param font the font to use
+ * \param number character ASCII code (0 to 127)
  */
 unsigned char *get_character(font_t *font, int number);
+
+
+/**
+ * Find the glyph to use for representing a UTF-8 character.
+ * 
+ * \param font the font to use
+ * \param character a pointer to the UTF-8 character
+ * \param nbBytes the number of bytes to represent this character (will
+ * be modified by the function)
+ * \return a pointer on the data for the glyph
+ */
+unsigned char *get_glyph(font_t *font, char *character, int *nbBytes);
+
 
 #endif
