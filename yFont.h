@@ -37,10 +37,11 @@ struct psf2_header {
 };
 
 
-
 typedef struct {
     struct psf2_header header;
     unsigned char *glyphs;
+    // only one UTF8 value by glyph is supported for now
+    unsigned int *utf8_values; /**< an array of "header.length" utf8 encoded unicode values */
 } font_t;
 
 
@@ -84,7 +85,7 @@ void print_header_infos(struct psf2_header header);
 /**
  * \return a pointer on the data for the glyph on index "number"
  * \param font the font to use
- * \param number character ASCII code (0 to 127)
+ * \param number character index in font
  */
 unsigned char *get_character(font_t *font, int number);
 

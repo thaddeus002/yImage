@@ -66,12 +66,9 @@ int main(int argc, char **argv) {
     }
 
     for(i=0; i<font->header.length; i++) {
-        char c[2];
-        c[0] = i;
-        c[1] = '\0';
         int x=(i%16)*font->header.width;
         int y=(i/16)*font->header.height;
-        y_display_text_with_font(image, x, y, c, font);
+        y_display_font_char(image, x, y, i, font);
     }
 
     release_font(font);

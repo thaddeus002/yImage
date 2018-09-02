@@ -29,6 +29,19 @@
  *
  * The integers in the psf2 header struct are little endian 4-byte
  * integers.
+ *
+ * The bitmaps may be followed by a Unicode description of the glyphs.
+ * This Unicode description of a position has grammar
+ *    <unicodedescription> := <uc>*<seq>*0xFF
+ *    <seq> := 0xFE<uc><uc>*
+ * where <uc> is a Unicode value coded in UTF-8, and * denotes zero or
+ * more occurrences of the preceding item.
+ *
+ * The semantics is as follows. The leading <uc>* part gives Unicode
+ * symbols that are all represented by this font position. The following
+ * sequences are sequences of Unicode symbols - probably a symbol
+ * together with combining accents - also represented by this font
+ * position. 
  */
 
 
@@ -69,6 +82,57 @@ int is_header_valid(struct psf2_header header){
 
 
 /**
+ * Read an UTF8 encoded value in a array of char.
+ */
+static unsigned int read_utf8_value(unsigned char *character, int *nbBytes){
+
+    int first = (unsigned char) character[0];
+    *nbBytes = 1;
+    unsigned int scalar = first;
+
+    if(first <= 127) {
+        return first;
+    }
+
+    if(first >> 5 == 6) {
+        *nbBytes = 2;
+    } else if (first >> 4 == 14) {
+        *nbBytes = 3;
+    } else if (first >> 3 == 30) {
+        *nbBytes = 4;
+    }
+
+    int i;
+    for (i=1; i < *nbBytes; i++) {
+        scalar = scalar * 256 + (unsigned char) character[i];
+    }
+
+    return scalar;
+}
+
+
+static void init_utf8_table(unsigned int *utf8_values, int nb_glyphs, unsigned char *data, int data_len) {
+
+    int pos = 0;
+    int i = 0;
+    while (pos < data_len && i < nb_glyphs) {
+
+        int nb;
+        unsigned int value = read_utf8_value(data+pos, &nb);
+
+        utf8_values[i] = value;
+
+        pos+=nb;
+        while(pos < data_len && data[pos] != PSF2_SEPARATOR) {
+            pos++;
+        }
+        pos++;
+        i++;
+    }
+}
+
+
+/**
  * Read the font in an array of unsigned char.
  */
 static font_t *read_array_font(int *err, unsigned char *binary) {
@@ -83,6 +147,8 @@ static font_t *read_array_font(int *err, unsigned char *binary) {
         *err=Y_ERR_ALLOCATE_FAIL;
         return(NULL);
     }
+
+    font->utf8_values = NULL;
 
     memcpy(&(font->header), binary, sizeof(struct psf2_header)); 
 
@@ -102,6 +168,20 @@ static font_t *read_array_font(int *err, unsigned char *binary) {
     }
 
     memcpy(font->glyphs, binary+sizeof(struct psf2_header), data_size);
+
+    if(font->header.flags & PSF2_HAS_UNICODE_TABLE) {
+
+        font->utf8_values = malloc(font->header.length * sizeof(unsigned int));
+
+        if(font->utf8_values==NULL){
+            *err=Y_ERR_ALLOCATE_FAIL;
+            free(font->glyphs);
+            free(font);
+            return(NULL);
+        }
+
+        init_utf8_table(font->utf8_values, font->header.length, binary + sizeof(struct psf2_header) + data_size, yLat1_14_psfu_len);
+    }
 
     return(font);
 }
@@ -135,6 +215,8 @@ font_t *read_font(int *err, char *filename){
         return(NULL);
     }
 
+    font->utf8_values = NULL;
+
     nb_lus=fread(&(font->header), sizeof(struct psf2_header), 1, fd);
 
     if((nb_lus<1)||(!is_header_valid(font->header))){
@@ -164,6 +246,41 @@ font_t *read_font(int *err, char *filename){
         return(NULL);
     }
 
+    if(font->header.flags & PSF2_HAS_UNICODE_TABLE) {
+
+        font->utf8_values = malloc(font->header.length * sizeof(unsigned int));
+
+        if(font->utf8_values==NULL){
+            *err=Y_ERR_ALLOCATE_FAIL;
+            free(font->glyphs);
+            free(font);
+            return(NULL);
+        }
+
+        long curpos = ftell(fd);
+        fseek(fd, 0L, SEEK_END);
+        long endpos = ftell(fd);
+        fseek(fd, curpos, SEEK_SET);
+
+        unsigned char *utf_data;
+        utf_data = malloc(sizeof(unsigned char) * (endpos - curpos));
+        
+        if(utf_data==NULL){
+            *err=Y_ERR_ALLOCATE_FAIL;
+            free(font->utf8_values);
+            free(font->glyphs);
+            free(font);
+            return(NULL);
+        }
+
+        int nbr = fread(utf_data, endpos-curpos, 1, fd);
+        // TODO handle the case nbr == 0
+
+        init_utf8_table(font->utf8_values, font->header.length, utf_data, endpos - curpos);
+
+        free(utf_data);
+    }
+
     fclose(fd);
     return(font);
 }
@@ -174,6 +291,8 @@ void release_font(font_t *font){
     if(font==NULL) return;
 
     if(font->glyphs!=NULL) free(font->glyphs);
+
+    if(font->utf8_values!=NULL) free(font->utf8_values);
 
     free(font);
 }
@@ -194,42 +313,36 @@ void print_header_infos(struct psf2_header header){
 }
 
 /* returns a pointer on the data for the glyph on index "number" */
-/* TODO make this static */
 unsigned char *get_character(font_t *font, int number){
 
+    if(number>=font->header.length) return NULL;
 
     if(font->glyphs==NULL) return NULL;
 
-    if(number <= 127) {
+    if(number > 0) {
         return(font->glyphs+(font->header.charsize)*number);
     }
 
-    /* Use the default glyph for non ASCII character */
+    /* If not found, use the default glyph */
     return(font->glyphs);
 }
 
 
-unsigned char *get_glyph(font_t *font, char *character, int *nbBytes){
-
-    int first = (unsigned char) character[0];
-    *nbBytes = 1;
-    int scalar = first;
-
-    if(first <= 127) {
-        return get_character(font, first);
-    }
-
-    if(first >> 5 == 6) {
-        *nbBytes = 2;
-    } else if (first >> 4 == 14) {
-        *nbBytes = 3;
-    } else if (first >> 3 == 30) {
-        *nbBytes = 4;
-    }
+/**
+ * Returns glyph index if exists for an utf8 value, or -1.
+ */
+static int glyph_index(font_t *font, unsigned int value) {
 
     int i;
-    for (i=1; i < *nbBytes; i++) {
-        scalar = scalar * 256 + (unsigned char) character[i];
+    for(i=0; i<font->header.length; i++) {
+        if(font->utf8_values[i] == value) {
+            return i;
+        }
     }
-    return get_character(font, scalar);
+
+    return -1;
+}
+
+unsigned char *get_glyph(font_t *font, char *character, int *nbBytes){
+    return get_character(font, glyph_index(font, read_utf8_value(character, nbBytes)));
 }

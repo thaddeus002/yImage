@@ -116,11 +116,85 @@ int y_display_text_with_font(yImage *fond, int x, int y, char *text, font_t *fon
 }
 
 
+/**
+ * The image of a glyph.
+ */
+yImage *y_create_glyph(font_t *font, int index, yColor *color){
+
+    yImage *im;
+    int err;
+    unsigned char *car; /* the char to display */
+    int longCar; /* number of bytes of car */
+
+    if(font==NULL) return NULL;
+
+    im=y_create_image(&err, NULL, font->header.width, font->header.height);
+    y_transp(im);
+
+    longCar=font->header.charsize;
+    car = get_character(font, index);
+
+    if(car!=NULL){
+        /* TODO : do this better */
+        int j;
+        for(j=0; j<longCar; j++){
+            int k;
+            for(k=7; k>0; k--){
+                int p=((1<<k)&car[j]);
+                if(p) {
+                    y_set_pixel(im, color, 7-k, j);
+                }
+            }
+        }
+    } else {
+        // failled getting the character
+        int j;
+        for(j=0; j<longCar; j++){
+            int k;
+            for(k=7; k>0; k--){
+                y_set_pixel(im, color, 7-k, j);
+            }
+        }
+        fprintf(stderr, "Could not load the font's glyph with index %d\n", index);
+    }
+
+    return im;
+}
+
+
+/**
+ * To display a font's glyph.
+ */
+int y_display_font_char(yImage *fond, int x, int y, int index, font_t *font){
+
+    yColor black;
+
+    y_set_color(&black, 0, 0, 0, 255);
+    return y_display_font_char_with_color(fond, x, y, index, font, &black);
+}
+
+
 int y_display_text_with_font_and_color(yImage *fond, int x, int y, char *text, font_t *font, yColor *color){
 
     yImage *textIm;
 
     textIm=y_create_text(font, text, color);
+
+    if(textIm==NULL) return 0;
+
+    y_superpose_images(fond, textIm, x, y);
+    return 0;
+}
+
+
+/**
+ * To display a font's glyph.
+ */
+int y_display_font_char_with_color(yImage *fond, int x, int y, int index, font_t *font, yColor *color){
+
+    yImage *textIm;
+
+    textIm=y_create_glyph(font, index, color);
 
     if(textIm==NULL) return 0;
 

@@ -81,4 +81,17 @@ int y_display_text_with_font_and_color(yImage *fond, int x, int y, char *text, f
 
 
 
+/**
+ * To display a font's glyph.
+ */
+int y_display_font_char(yImage *fond, int x, int y, int index, font_t *font);
+
+
+/**
+ * To display a font's glyph.
+ */
+int y_display_font_char_with_color(yImage *fond, int x, int y, int index, font_t *font, yColor *color);
+
+
+
 #endif
