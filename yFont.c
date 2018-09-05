@@ -371,5 +371,5 @@ static int glyph_index(font_t *font, unsigned int value) {
 }
 
 unsigned char *get_glyph(font_t *font, char *character, int *nbBytes){
-    return get_character(font, glyph_index(font, read_utf8_value(character, nbBytes)));
+    return get_character(font, glyph_index(font, read_utf8_value((unsigned char *)character, nbBytes)));
 }
