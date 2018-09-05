@@ -31,45 +31,45 @@ yImage *y_create_text(font_t *font, char *text, yColor *color);
 
 /**
  * \brief Display a text in black on an existing image.
- * \param fond the background image
+ * \param background the background image
  * \param x x position on the background image to begin writing
  * \param y y position on the background image to write
  * \param text the text to display
  * \return 0 in case of success
  */
-int y_display_text(yImage *fond, int x, int y, char *text);
+int y_display_text(yImage *background, int x, int y, char *text);
 
 
 /**
  * \brief Display a text on an existing image.
- * \param fond the background image
+ * \param background the background image
  * \param x x position on the background image to begin writing
  * \param y y position on the background image to write
  * \param text the text to display
  * \param color the text color
  * \return 0 in case of success
  */
-int y_display_text_with_color(yImage *fond, int x, int y, char *text, yColor *color);
+int y_display_text_with_color(yImage *background, int x, int y, char *text, yColor *color);
 
 
 
 /**
  * \brief Display a text in black on an existing image, using a
  * specified font.
- * \param fond the background image
+ * \param background the background image
  * \param x x position on the background image to begin writing
  * \param y y position on the background image to write
  * \param text the text to display
  * \param font the font to use
  * \return 0 in case of success
  */
-int y_display_text_with_font(yImage *fond, int x, int y, char *text, font_t *font);
+int y_display_text_with_font(yImage *background, int x, int y, char *text, font_t *font);
 
 
 /**
  * \brief Display a text on an existing image, using a
  * specified font.
- * \param fond the background image
+ * \param background the background image
  * \param x x position on the background image to begin writing
  * \param y y position on the background image to write
  * \param text the text to display
@@ -77,20 +77,20 @@ int y_display_text_with_font(yImage *fond, int x, int y, char *text, font_t *fon
  * \param color the text color
  * \return 0 in case of success
  */
-int y_display_text_with_font_and_color(yImage *fond, int x, int y, char *text, font_t *font, yColor *color);
+int y_display_text_with_font_and_color(yImage *background, int x, int y, char *text, font_t *font, yColor *color);
 
 
 
 /**
  * To display a font's glyph.
  */
-int y_display_font_char(yImage *fond, int x, int y, int index, font_t *font);
+int y_display_font_char(yImage *background, int x, int y, int index, font_t *font);
 
 
 /**
  * To display a font's glyph.
  */
-int y_display_font_char_with_color(yImage *fond, int x, int y, int index, font_t *font, yColor *color);
+int y_display_font_char_with_color(yImage *background, int x, int y, int index, font_t *font, yColor *color);
 
 
 

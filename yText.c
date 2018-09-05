@@ -68,7 +68,7 @@ yImage *y_create_text(font_t *font, char *text, yColor *color){
 }
 
 
-int y_display_text(yImage *fond, int x, int y, char *text) {
+int y_display_text(yImage *background, int x, int y, char *text) {
 
     int err;
     font_t *font;
@@ -80,7 +80,7 @@ int y_display_text(yImage *fond, int x, int y, char *text) {
         return err;
     }
 
-    err = y_display_text_with_font(fond, x, y, text, font);
+    err = y_display_text_with_font(background, x, y, text, font);
 
     release_font(font);
 
@@ -88,7 +88,7 @@ int y_display_text(yImage *fond, int x, int y, char *text) {
 }
 
 
-int y_display_text_with_color(yImage *fond, int x, int y, char *text, yColor *color) {
+int y_display_text_with_color(yImage *background, int x, int y, char *text, yColor *color) {
 
     int err;
     font_t *font;
@@ -100,19 +100,19 @@ int y_display_text_with_color(yImage *fond, int x, int y, char *text, yColor *co
         return err;
     }
 
-    err = y_display_text_with_font_and_color(fond, x, y, text, font, color);
+    err = y_display_text_with_font_and_color(background, x, y, text, font, color);
 
     release_font(font);
 
     return err;
 }
 
-int y_display_text_with_font(yImage *fond, int x, int y, char *text, font_t *font){
+int y_display_text_with_font(yImage *background, int x, int y, char *text, font_t *font){
 
     yColor black;
 
     y_set_color(&black, 0, 0, 0, 255);
-    return y_display_text_with_font_and_color(fond, x, y, text, font, &black);
+    return y_display_text_with_font_and_color(background, x, y, text, font, &black);
 }
 
 
@@ -165,16 +165,16 @@ yImage *y_create_glyph(font_t *font, int index, yColor *color){
 /**
  * To display a font's glyph.
  */
-int y_display_font_char(yImage *fond, int x, int y, int index, font_t *font){
+int y_display_font_char(yImage *background, int x, int y, int index, font_t *font){
 
     yColor black;
 
     y_set_color(&black, 0, 0, 0, 255);
-    return y_display_font_char_with_color(fond, x, y, index, font, &black);
+    return y_display_font_char_with_color(background, x, y, index, font, &black);
 }
 
 
-int y_display_text_with_font_and_color(yImage *fond, int x, int y, char *text, font_t *font, yColor *color){
+int y_display_text_with_font_and_color(yImage *background, int x, int y, char *text, font_t *font, yColor *color){
 
     yImage *textIm;
 
@@ -182,7 +182,7 @@ int y_display_text_with_font_and_color(yImage *fond, int x, int y, char *text, f
 
     if(textIm==NULL) return 0;
 
-    y_superpose_images(fond, textIm, x, y);
+    y_superpose_images(background, textIm, x, y);
     return 0;
 }
 
@@ -190,7 +190,7 @@ int y_display_text_with_font_and_color(yImage *fond, int x, int y, char *text, f
 /**
  * To display a font's glyph.
  */
-int y_display_font_char_with_color(yImage *fond, int x, int y, int index, font_t *font, yColor *color){
+int y_display_font_char_with_color(yImage *background, int x, int y, int index, font_t *font, yColor *color){
 
     yImage *textIm;
 
@@ -198,7 +198,7 @@ int y_display_font_char_with_color(yImage *fond, int x, int y, int index, font_t
 
     if(textIm==NULL) return 0;
 
-    y_superpose_images(fond, textIm, x, y);
+    y_superpose_images(background, textIm, x, y);
     return 0;
 }
 
