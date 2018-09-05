@@ -163,7 +163,7 @@ int y_save_png(yImage *im, const char *file)
                 data[(x << 2) + 2] = *ptr++;
                 if(im->alphaChanel!=NULL)
                     data[(x << 2) + 3] = im->alphaChanel[ x + y*im->rgbWidth ];
-                else if(im->presShapeColor)
+                else if(im->hasShapeColor)
                     if ((data[(x << 2) + 0] == im->shapeColor.r) &&
                         (data[(x << 2) + 1] == im->shapeColor.g) &&
                         (data[(x << 2) + 2] == im->shapeColor.b))

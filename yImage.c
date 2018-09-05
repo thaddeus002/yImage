@@ -59,7 +59,7 @@ yImage *y_create_image(int *err, const unsigned char *rgbData, int width, int he
     im->rgbHeight=height;
     im->rgbWidth=width;
 
-    im->presShapeColor=0;
+    im->hasShapeColor=0;
 
     im->shapeColor.r=0;
     im->shapeColor.g=0;
@@ -136,7 +136,7 @@ int y_transp(yImage *im){
     if(im->alphaChanel==NULL) return ERR_ALLOCATE_FAIL;
 
     memset(im->alphaChanel, 0, im->rgbWidth*im->rgbHeight);
-    im->presShapeColor=0;
+    im->hasShapeColor=0;
 
     return 0;
 }
@@ -170,7 +170,7 @@ void y_superpose_images(yImage *back, yImage *fore, int x, int y){
             yColor foreColor;
             y_set_color(&foreColor, rf, gf, bf, af);
 
-            if(!fore->presShapeColor || y_compare_colors(&(fore->shapeColor), &foreColor)) {
+            if(!fore->hasShapeColor || y_compare_colors(&(fore->shapeColor), &foreColor)) {
                 /* TODO vraie superposition de couleurs */
                 composition.r=((255-af)*rb + af*rf)/255;
                 composition.b=((255-af)*bb + af*bf)/255;//af>0?bf:bb;

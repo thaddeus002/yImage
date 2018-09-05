@@ -24,7 +24,7 @@ int y_fill_image(yImage *im, yColor *c){
         im->rgbData[3*i+1]=c->g;
         im->rgbData[3*i+2]=c->b;
         im->alphaChanel[i]=c->alpha;
-        im->presShapeColor=0;
+        im->hasShapeColor=0;
     }
 
     return 0;
@@ -53,7 +53,7 @@ int y_draw_point(yImage *im, yPoint P, yColor *c){
 
     if(index < 0) return 0;
 
-    if((im->presShapeColor==1) && (c->alpha=0)){
+    if((im->hasShapeColor==1) && (c->alpha=0)){
         im->rgbData[3*index]=im->shapeColor.r;
         im->rgbData[3*index+1]=im->shapeColor.g;
         im->rgbData[3*index+2]=im->shapeColor.b;

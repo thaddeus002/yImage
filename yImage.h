@@ -34,12 +34,12 @@ typedef struct {
     unsigned char *alphaChanel; /**< \brief array of alpha (8bits) values */
     int rgbWidth; /**< \brief image's width */
     int rgbHeight; /**< \brief image's height */
-    int presShapeColor; /**< indicate if the struct's field shape_color is use or not */
+    int hasShapeColor; /**< indicate if the struct's field shape_color is use or not */
     /**
      * \brief Color used for transparent pixels.
      *
      * This field will be take into account only if alpha_chanel == NULL
-     * and presShapeColor != 0.
+     * and hasShapeColor != 0.
      *
      * If this is used, image has not progressive transparency, and
      * that color can not be displayed.
