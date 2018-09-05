@@ -192,6 +192,11 @@ font_t *read_default_font(int *err) {
 }
 
 
+static void remove_flag(font_t *font, int flag) {
+    font->header.flags = font->header.flags & (0xffffffff - flag);
+}
+
+
 font_t *read_font(int *err, char *filename){
 
     font_t *font;
@@ -254,6 +259,7 @@ font_t *read_font(int *err, char *filename){
             *err=Y_ERR_ALLOCATE_FAIL;
             free(font->glyphs);
             free(font);
+            fclose(fd);
             return(NULL);
         }
 
@@ -270,11 +276,22 @@ font_t *read_font(int *err, char *filename){
             free(font->utf8_values);
             free(font->glyphs);
             free(font);
+            fclose(fd);
             return(NULL);
         }
 
         int nbr = fread(utf_data, endpos-curpos, 1, fd);
         // TODO handle the case nbr == 0
+        if(nbr == 0) {
+            // UTF8 support is not possible
+            fprintf(stderr, "font has flag PSF2_HAS_UNICODE_TABLE but not data was found\n");
+            remove_flag(font, PSF2_HAS_UNICODE_TABLE);
+            free(font->utf8_values);
+            font->utf8_values=NULL;
+            free(utf_data);
+            fclose(fd);
+            return(font);
+        }
 
         init_utf8_table(font->utf8_values, font->header.length, utf_data, endpos - curpos);
 
@@ -334,6 +351,16 @@ unsigned char *get_character(font_t *font, int number){
 static int glyph_index(font_t *font, unsigned int value) {
 
     int i;
+
+    if(! (font->header.flags & PSF2_HAS_UNICODE_TABLE)) {
+        // Only 7-bits ASCII is supported
+        if(value<=32 || value > 127) {
+            // use a default glyph
+            return -1;
+        }
+        return value;
+    }
+
     for(i=0; i<font->header.length; i++) {
         if(font->utf8_values[i] == value) {
             return i;
