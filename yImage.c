@@ -171,7 +171,7 @@ void y_superpose_images(yImage *back, yImage *fore, int x, int y){
             y_set_color(&foreColor, rf, gf, bf, af);
 
             if(!fore->hasShapeColor || y_compare_colors(&(fore->shapeColor), &foreColor)) {
-                /* TODO vraie superposition de couleurs */
+                /* TODO make a better colors superposition */
                 composition.r=((255-af)*rb + af*rf)/255;
                 composition.b=((255-af)*bb + af*bf)/255;//af>0?bf:bb;
                 composition.g=((255-af)*gb + af*gf)/255;//af>0?gf:gb;

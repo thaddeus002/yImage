@@ -183,6 +183,7 @@ int y_display_text_with_font_and_color(yImage *background, int x, int y, char *t
     if(textIm==NULL) return 0;
 
     y_superpose_images(background, textIm, x, y);
+    y_destroy_image(textIm);
     return 0;
 }
 
@@ -199,6 +200,7 @@ int y_display_font_char_with_color(yImage *background, int x, int y, int index, 
     if(textIm==NULL) return 0;
 
     y_superpose_images(background, textIm, x, y);
+    y_destroy_image(textIm);
     return 0;
 }
 
