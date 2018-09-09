@@ -188,6 +188,54 @@ int y_display_text_with_font_and_color(yImage *background, int x, int y, char *t
 }
 
 
+static yImage *rotate_90_degrees(yImage *input) {
+
+    int i, j;
+    int err;
+    yImage *rotated = y_create_image(&err, NULL, input->rgbHeight, input->rgbWidth);
+    if(input->hasShapeColor) {
+        rotated->hasShapeColor = 1;
+        rotated->shapeColor = input->shapeColor;
+    }
+
+    for(i=0; i<input->rgbWidth; i++) {
+        for(j=0; j<input->rgbHeight; j++) {
+            int oPos = j + (rotated->rgbHeight - 1 - i)*rotated->rgbWidth;
+            int iPos = i + j*input->rgbWidth;
+            rotated->rgbData[3*oPos] = input->rgbData[3*iPos];
+            rotated->rgbData[3*oPos+1] = input->rgbData[3*iPos+1];
+            rotated->rgbData[3*oPos+2] = input->rgbData[3*iPos+2];
+            rotated->alphaChanel[oPos] = input->alphaChanel[iPos]; 
+        }
+    }
+
+    return rotated;
+}
+
+
+int y_display_text_vertically_with_font_and_color(yImage *background, int x, int y, char *text, font_t *font, yColor *color){
+
+    yImage *textIm;
+    yImage *rotatedTextIm;
+    textIm=y_create_text(font, text, color);
+
+    if(textIm==NULL) return 0;
+
+    rotatedTextIm = rotate_90_degrees(textIm);
+    y_destroy_image(textIm);
+    y_superpose_images(background, rotatedTextIm, x, y);
+    y_destroy_image(rotatedTextIm);
+    return 0;
+}
+
+int y_display_text_vertically_with_font(yImage *background, int x, int y, char *text, font_t *font){
+    yColor black;
+
+    y_set_color(&black, 0, 0, 0, 255);
+    return y_display_text_vertically_with_font_and_color(background, x, y, text, font, &black);
+}
+
+
 /**
  * To display a font's glyph.
  */

@@ -80,6 +80,32 @@ int y_display_text_with_font(yImage *background, int x, int y, char *text, font_
 int y_display_text_with_font_and_color(yImage *background, int x, int y, char *text, font_t *font, yColor *color);
 
 
+/**
+ * \brief Display a text vertically on an existing image, using a
+ * specified font.
+ * \param background the background image
+ * \param x x position on the background image to begin write
+ * \param y y position on the background image to begin writing
+ * \param text the text to display
+ * \param font the font to use
+ * \param color the text color
+ * \return 0 in case of success
+ */
+int y_display_text_vertically_with_font_and_color(yImage *background, int x, int y, char *text, font_t *font, yColor *color);
+
+
+/**
+ * \brief Display a text vertically in black on an existing image, using
+ * a specified font.
+ * \param background the background image
+ * \param x x position on the background image to begin write
+ * \param y y position on the background image to begin writing
+ * \param text the text to display
+ * \param font the font to use
+ * \return 0 in case of success
+ */
+int y_display_text_vertically_with_font(yImage *background, int x, int y, char *text, font_t *font);
+
 
 /**
  * To display a font's glyph.
