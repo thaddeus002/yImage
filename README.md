@@ -49,7 +49,7 @@ And then to install it in `/usr/local/lib` and the headers files in `/usr/local/
 $ make install
 ```
 
-Generate the API documentation needs doxygen. Process by typing :
+Generate the API documentation needs doxygen (and graphviz for the graphs). Process by typing :
 
 ```sh
 $ make doc
